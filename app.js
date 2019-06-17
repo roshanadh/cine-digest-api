@@ -35,6 +35,7 @@ app.get('/api/v1/searchm/:movieName/:language/', (req, res) => {
             // response.body is a JSON object
             jsonResponse = JSON.parse(response.body); 
             let movieId = parseInt(jsonResponse.id, 10); // parse to base 10 (decimal)
+            // TODO get movie description, poster and others from jsonResponse
             res.send(jsonResponse);
         }
     });
