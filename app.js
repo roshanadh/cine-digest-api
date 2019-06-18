@@ -6,10 +6,12 @@ const request = require('request');
 
 // Environment variable
 const PORT = process.env.PORT;
-const TMDB_KEY = process.env.TMDB_KEY;
+const OMDB_KEY = process.env.OMDB_KEY;
 
 // Request URLs
-const searchMovieUrl = 'https://api.themoviedb.org/3/search/movie?api_key=' + TMDB_KEY;
+const apiUrl = 'http://www.omdbapi.com/';
+const apiKey = "&apikey=" + OMDB_KEY;
+//  + movieTitle + '&apikey=' + OMDB_KEY;
 let finalSearchUrl;
 
 // GET method routes
@@ -18,12 +20,11 @@ app.get('/api/v1', (req, res) => {
     res.send("API backend for Movie Digest");
 });
 
-//Search movie
-app.get('/api/v1/searchm/:movieName/:language/', (req, res) => {
-    let movieName = req.params.movieName;   // pulp%20fiction
-    let language = req.params.language;     // en-US
+//Search movie by title http://www.omdbapi.com/?t=Pulp+fiction&y=1994
+app.get('/api/v1/searchm/:query/', (req, res) => {
+    let query = req.params.query;   // pulp+fiction
 
-    finalSearchUrl = searchMovieUrl + '&language=' + language + '&query=' + movieName;
+    finalSearchUrl = apiUrl + '?t=' + query + apiKey;
     console.log(finalSearchUrl);
 
     request.get(finalSearchUrl, (error, response, body) => {
@@ -34,9 +35,21 @@ app.get('/api/v1/searchm/:movieName/:language/', (req, res) => {
 
             // response.body is a JSON object
             jsonResponse = JSON.parse(response.body); 
-            let movieId = parseInt(jsonResponse.id, 10); // parse to base 10 (decimal)
-            // TODO get movie description, poster and others from jsonResponse
-            res.send(jsonResponse);
+            let movieTitle = jsonResponse.Title;
+            let movieYear = jsonResponse.Year;
+            let movieRated = jsonResponse.Rated;
+            let movieRuntime = jsonResponse.Runtime;
+            let movieGenre = jsonResponse.Genre;
+            let movieDirector = jsonResponse.Director;
+            let movieActors = jsonResponse.Actors;
+            let moviePlot = jsonResponse.Plot;
+            let movieLanguage = jsonResponse.Language;
+            let movieImdbRating = jsonResponse.imdbRating;  
+            
+            console.log(jsonResponse);
+            res.send(jsonResponse + movieTitle + movieYear 
+                + movieRated + movieRuntime + movieGenre + movieDirector 
+                + movieActors + moviePlot + movieLanguage + movieImdbRating);
         }
     });
 
