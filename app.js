@@ -85,6 +85,49 @@ function respondShowBySeason(fetchResponse){
     return response;
 }
 
+function respondShowByEpisode(fetchResponse){
+    let response;
+
+    if(fetchResponse.Response == "False"){
+        response = {"Message": "False"};
+    }
+    else{
+        let message = "True";
+        let episodeTitle = fetchResponse.Title;
+        let episodeYear = fetchResponse.Year;
+        let episodeRated = fetchResponse.Rated;
+        let episodeSeason = fetchResponse.Season;
+        let episodeNumber = fetchResponse.Episode;
+        let episodeRuntime = fetchResponse.runtime;
+        let episodeGenre = fetchResponse.Genre;
+        let episodeDirector = fetchResponse.Director;
+        let episodeActors = fetchResponse.Actors;
+        let episodePlot = fetchResponse.Plot;
+        let episodeLanguage = fetchResponse.Language;
+        let episodeImdbRating = fetchResponse.imdbRating;
+        let posterPath = fetchResponse.Poster;
+
+        response = {
+            "Message": message,
+            "Title": episodeTitle,
+            "Year": episodeYear,
+            "Rated": episodeRated,
+            "Season": episodeSeason,
+            "Episode": episodeNumber,
+            "Runtime": episodeRuntime,
+            "Genre": episodeGenre,
+            "Director": episodeDirector,
+            "Actors": episodeActors,
+            "Plot": episodePlot,
+            "Language": episodeLanguage,
+            "imdbRating": episodeImdbRating,
+            "Poster": posterPath
+        }
+    }
+    console.log(response);
+    return response;
+}
+
 // GET method routes
 // Landing route
 app.get('/api/v1', (req, res) => {
@@ -151,8 +194,8 @@ app.get('/api/v1/searchm/:query/:year', (req, res) => {
 // Search TV show by seasons (without episodes); lists all episodes 
 //http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
 app.get('/api/v1/searchs/:query/:season', (req, res) => {
-    let query = req.params.query;   // pulp+fiction
-    let season = req.params.season;
+    let query = req.params.query;       // Game+of+Thrones
+    let season = req.params.season;     //1
 
     finalSearchUrl = omdbApiUrl + '?t=' + query + "&season="+ season + omdbApiKey;
     console.log(finalSearchUrl);
@@ -165,7 +208,6 @@ app.get('/api/v1/searchs/:query/:season', (req, res) => {
 
             // response.body is a JSON object
             fetchResponse = JSON.parse(resp.body); 
-            console.log(fetchResponse);
             let response = respondShowBySeason(fetchResponse);
 
             if(response.Message == "True")
@@ -180,6 +222,34 @@ app.get('/api/v1/searchs/:query/:season', (req, res) => {
 
 // Search TV show by seasons (with episodes)
 //http://www.omdbapi.com/?t=Game+of+Thrones&season=1&episode=1
+app.get('/api/v1/searchs/:query/:season/:episode', (req, res) => {
+    let query = req.params.query;       // Game+of+Thrones
+    let season = req.params.season;     //1
+    let episode = req.params.episode;     //1
+
+    finalSearchUrl = omdbApiUrl + '?t=' + query + "&season="+ season + "&episode=" + episode + omdbApiKey;
+    console.log(finalSearchUrl);
+
+    request.get(finalSearchUrl, (error, resp, body) => {
+        if(error)
+            console.log(err);
+        else{
+            console.log(resp);
+
+            // response.body is a JSON object
+            fetchResponse = JSON.parse(resp.body); 
+            let response = respondShowByEpisode(fetchResponse);
+
+            if(response.Message == "True")
+                res.status(200);
+            else
+                res.status(404);
+            res.send(response);   
+        }
+    });
+
+});
+
 app.listen(PORT, () => {
     console.log(`Server is now listening on port ${PORT}`);
 });
