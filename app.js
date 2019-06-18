@@ -20,51 +20,116 @@ app.get('/api/v1', (req, res) => {
     res.send("API backend for Movie Digest");
 });
 
-//Search movie by title http://www.omdbapi.com/?t=Pulp+fiction&y=1994
+// TODO both GET methods have similar functionality, employ it to a common function
+
+//Search movie by title (without year) http://www.omdbapi.com/?t=Pulp+fiction
 app.get('/api/v1/searchm/:query/', (req, res) => {
     let query = req.params.query;   // pulp+fiction
 
     finalSearchUrl = apiUrl + '?t=' + query + apiKey;
     console.log(finalSearchUrl);
 
-    request.get(finalSearchUrl, (error, response, body) => {
+    request.get(finalSearchUrl, (error, resp, body) => {
         if(error)
             console.log(err);
         else{
-            console.log(response);
+            console.log(resp);
 
-            // response.body is a JSON object
-            jsonResponse = JSON.parse(response.body); 
-            let movieTitle = jsonResponse.Title;
-            let movieYear = jsonResponse.Year;
-            let movieRated = jsonResponse.Rated;
-            let movieRuntime = jsonResponse.Runtime;
-            let movieGenre = jsonResponse.Genre;
-            let movieDirector = jsonResponse.Director;
-            let movieActors = jsonResponse.Actors;
-            let moviePlot = jsonResponse.Plot;
-            let movieLanguage = jsonResponse.Language;
-            let movieImdbRating = jsonResponse.imdbRating;  
-            
-            console.log(jsonResponse);
-            res.send(jsonResponse + movieTitle + movieYear 
-                + movieRated + movieRuntime + movieGenre + movieDirector 
-                + movieActors + moviePlot + movieLanguage + movieImdbRating);
+           // response.body is a JSON object
+           fetchResponse = JSON.parse(resp.body); 
+           if(fetchResponse.Response == "False"){
+               res.status(404).send({"message": "False"});
+           }
+           else{
+               let message = "True";
+               let movieTitle = fetchResponse.Title;
+               let movieYear = fetchResponse.Year;
+               let movieRated = fetchResponse.Rated;
+               let movieRuntime = fetchResponse.Runtime;
+               let movieGenre = fetchResponse.Genre;
+               let movieDirector = fetchResponse.Director;
+               let movieActors = fetchResponse.Actors;
+               let moviePlot = fetchResponse.Plot;
+               let movieLanguage = fetchResponse.Language;
+               let movieImdbRating = fetchResponse.imdbRating; 
+               let posterPath = fetchResponse.Poster;
+
+               let sendResponse = {
+                   "Message": message,
+                   "Title": movieTitle,
+                   "Year": movieYear,
+                   "Rated": movieRated,
+                   "Runtime": movieRuntime,
+                   "Genre": movieGenre,
+                   "Director": movieDirector,
+                   "Actors": movieActors,
+                   "Plot": moviePlot,
+                   "Language": movieLanguage,
+                   "imdbRating": movieImdbRating,
+                   "Poster": posterPath
+               }
+           
+               console.log(sendResponse);
+               res.status(200).send(sendResponse);
+           }
         }
     });
 
 });
-app.get('/api/v1/searchm/:movieName/:language/:year', (req, res) => {
-    let movieName = req.params.movieName;   // pulp%20fiction
-    let language = req.params.language;     // en-US
-    let year = req.params.year;             // 2003
 
-    finalSearchUrl = searchMovieUrl + '&language=' + language + '&query=' + movieName;
-    if(year.trim != "")
-        finalSearchUrl += '&year=' + year;
+//Search movie by title (with year) http://www.omdbapi.com/?t=Pulp+fiction&y=1994
+app.get('/api/v1/searchm/:query/:year', (req, res) => {
+    let query = req.params.query;   // pulp+fiction
+    let year = req.params.year;
+
+    finalSearchUrl = apiUrl + '?t=' + query + "&y="+ year + apiKey;
     console.log(finalSearchUrl);
 
-    request.get(finalSearchUrl)
+    request.get(finalSearchUrl, (error, resp, body) => {
+        if(error)
+            console.log(err);
+        else{
+            console.log(resp);
+
+            // response.body is a JSON object
+            fetchResponse = JSON.parse(resp.body); 
+            if(fetchResponse.Response == "False"){
+                res.status(404).send({"message": "False"});
+            }
+            else{
+                let message = "True";
+                let movieTitle = fetchResponse.Title;
+                let movieYear = fetchResponse.Year;
+                let movieRated = fetchResponse.Rated;
+                let movieRuntime = fetchResponse.Runtime;
+                let movieGenre = fetchResponse.Genre;
+                let movieDirector = fetchResponse.Director;
+                let movieActors = fetchResponse.Actors;
+                let moviePlot = fetchResponse.Plot;
+                let movieLanguage = fetchResponse.Language;
+                let movieImdbRating = fetchResponse.imdbRating; 
+                let posterPath = fetchResponse.Poster;
+
+                let sendResponse = {
+                    "Message": message,
+                    "Title": movieTitle,
+                    "Year": movieYear,
+                    "Rated": movieRated,
+                    "Runtime": movieRuntime,
+                    "Genre": movieGenre,
+                    "Director": movieDirector,
+                    "Actors": movieActors,
+                    "Plot": moviePlot,
+                    "Language": movieLanguage,
+                    "imdbRating": movieImdbRating,
+                    "Poster": posterPath
+                }
+            
+                console.log(sendResponse);
+                res.status(200).send(sendResponse);
+            }
+        }
+    });
 
 });
 
