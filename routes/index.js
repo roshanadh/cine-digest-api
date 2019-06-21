@@ -7,7 +7,7 @@ const CallbackController = require('../controllers/callbackControllers.js');
 router.get('/api/v1', CallbackController.getLanding);
 
 //Search movie by title (without year) http://www.omdbapi.com/?t=Pulp+Fiction
-router.get('/api/v1/searchm/:query/', CallbackController.getMovieByTitle);
+router.get('/api/v1/searchm/:query', CallbackController.getMovieByTitle);
 
 //Search movie by title (with year) http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
 router.get('/api/v1/searchm/:query/:year', CallbackController.getMovieByTitleAndYear);
