@@ -1,4 +1,5 @@
 function respondMovie(fetchResponse){
+    // returns the movie information as a JSON response
     let response;
 
     if(fetchResponse.Response == "False"){

@@ -1,4 +1,5 @@
 function respondShowBySeason(fetchResponse){
+    // returns the show information as a JSON response
     let response;
 
     if(fetchResponse.Response == "False"){
@@ -30,6 +31,7 @@ function respondShowBySeason(fetchResponse){
 }
 
 function respondShowByEpisode(fetchResponse){
+    // returns the show information as a JSON response
     let response;
 
     if(fetchResponse.Response == "False"){
