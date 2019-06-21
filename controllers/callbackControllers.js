@@ -1,5 +1,6 @@
 const request = require('request');
-const {respondMovie, respondShowBySeason, respondShowByEpisode} = require('../controllers/controllers.js');
+const respondMovie = require('../controllers/movieControllers.js');
+const {respondShowBySeason, respondShowByEpisode} = require('../controllers/showControllers.js');
 const {OMDB_KEY} = require('../utility.js');
 
 // Request URLs
@@ -27,7 +28,7 @@ class CallbackController{
                 console.log(resp);
 
                 // response.body is a JSON object
-                fetchResponse = JSON.parse(resp.body); 
+                let fetchResponse = JSON.parse(resp.body); 
                 let response = respondMovie(fetchResponse);
 
                 if(response.Message == "True")
@@ -53,7 +54,7 @@ class CallbackController{
                 console.log(resp);
 
                 // response.body is a JSON object
-                fetchResponse = JSON.parse(resp.body); 
+                let fetchResponse = JSON.parse(resp.body); 
                 let response = respondMovie(fetchResponse);
 
                 if(response.Message == "True")
@@ -79,7 +80,7 @@ class CallbackController{
                 console.log(resp);
 
                 // response.body is a JSON object
-                fetchResponse = JSON.parse(resp.body); 
+                let fetchResponse = JSON.parse(resp.body); 
                 let response = respondShowBySeason(fetchResponse);
 
                 if(response.Message == "True")
@@ -106,7 +107,7 @@ class CallbackController{
                 console.log(resp);
     
                 // response.body is a JSON object
-                fetchResponse = JSON.parse(resp.body); 
+                let fetchResponse = JSON.parse(resp.body); 
                 let response = respondShowByEpisode(fetchResponse);
     
                 if(response.Message == "True")

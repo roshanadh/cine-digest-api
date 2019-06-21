@@ -37,4 +37,4 @@ function respondMovie(fetchResponse){
     return response;
 }
 
-module.exports.respondMovie = respondMovie;
+module.exports = respondMovie;
