@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-// Environment variable
+// Environment variables
 const PORT = process.env.PORT || 3000;
 const OMDB_KEY = process.env.OMDB_KEY;
 
