@@ -106,7 +106,7 @@ app.get('/api/v1/searchm/:query/:year', (req, res) => {
             // response.body is a JSON object
             fetchResponse = JSON.parse(resp.body); 
            
-            let response = respond(fetchResponse);
+            let response = respondMovie(fetchResponse);
             if(response.Message == "True")
                 res.status(200);
             else
