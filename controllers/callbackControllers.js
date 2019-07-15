@@ -2,6 +2,13 @@ const request = require('request');
 const respondMovie = require('../controllers/movieControllers.js');
 const {respondShowBySeason, respondShowByEpisode} = require('../controllers/showControllers.js');
 const {OMDB_KEY} = require('../utility.js');
+require('dotenv').config();
+
+const TMDB_KEY = process.env.TMDB_KEY;
+const PORT = process.env.PORT || 3000;
+const BASE_URL = process.env.BASE_URL;
+const API_KEY_PARAM = process.env.API_KEY_PARAM;
+const QUERY_PARAM = process.env.QUERY_PARAM;
 
 // Request URLs
 const omdbApiUrl = 'http://www.omdbapi.com/';
@@ -15,27 +22,65 @@ class CallbackController{
         return res.send("API backend for Movie Digest");
     }
 
-    getMovieByTitle(req, res){
-        let query = req.params.query;   // pulp+fiction
+    getMovieByTitle(req, res){        
+        const requestURL = BASE_URL + API_KEY_PARAM + TMDB_KEY
+            + QUERY_PARAM + req.params.title;
 
-        finalSearchUrl = omdbApiUrl + '?t=' + query + omdbApiKey;
-        console.log(finalSearchUrl);
+        console.log(requestURL);
+        request.get(requestURL, (error, response, body) => {
+            const responseStatus = parseInt(response.statusCode, 10);
+            const responseBody = JSON.parse(body);
 
-        request.get(finalSearchUrl, (error, resp, body) => {
-            if(error)
-                console.log(err);
-            else{
-                console.log(resp);
+            // Separating concerns
+            const parsedTotalResults = parseInt(responseBody.total_results, 10);
 
-                // response.body is a JSON object
-                let fetchResponse = JSON.parse(resp.body); 
-                let response = respondMovie(fetchResponse);
+            /*
+                *   There are at most 20 results per page.
+                *   Cine Digest API is to return information on the
+                   first 20 (if there are) titles.
+            */
 
-                if(response.Message == "True")
-                    res.status(200);
-                else
-                    res.status(404);
-                return res.send(response);            
+            const totalResults = parsedTotalResults <= 20 ? parsedTotalResults : 20;
+            const resultsArray = responseBody.results;
+            const voteCounts = [];
+            const titleIds = [];
+            const voteAverages = [];
+            const titles = [];
+            const posterPaths = [];
+            const languages = [];
+            const overviews = [];
+            const releaseDates = [];
+
+            if (responseStatus === 200) {
+                const message = true;
+                for (var i = 0; i < totalResults; i++) {
+                    voteCounts[i] = resultsArray[i].vote_count;
+                    titleIds[i] = resultsArray[i].id;
+                    voteAverages[i] = resultsArray[i].vote_average;
+                    titles[i] = resultsArray[i].title;
+                    posterPaths[i] = resultsArray[i].poster_path;
+                    languages[i] = resultsArray[i].original_language;
+                    overviews[i] = resultsArray[i].overview;
+                    releaseDates[i] = resultsArray[i].release_date;
+                }
+                return res.status(200).json({
+                    responseStatus,
+                    message,
+                    totalResults,
+                    voteCounts,
+                    titleIds,
+                    voteAverages,
+                    titles,
+                    posterPaths,
+                    languages,
+                    overviews,
+                    releaseDates,
+                });
+            } else {
+                return res.status(404).json({
+                    responseStatus,
+                    message: 'false',
+                });
             }
         });
     }
