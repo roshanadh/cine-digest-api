@@ -26,7 +26,6 @@ class CallbackController{
         const requestURL = BASE_URL + API_KEY_PARAM + TMDB_KEY
             + QUERY_PARAM + req.params.title;
 
-        console.log(requestURL);
         request.get(requestURL, (error, response, body) => {
             const responseStatus = parseInt(response.statusCode, 10);
             const responseBody = JSON.parse(body);
