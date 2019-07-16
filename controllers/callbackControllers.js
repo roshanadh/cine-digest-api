@@ -1,9 +1,6 @@
-/* eslint-disable linebreak-style */
 /* eslint-disable prefer-template */
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable indent */
-/* eslint-disable object-curly-newline */
 const request = require('request');
 const respondMovie = require('../controllers/movieControllers.js');
 const { respondShowBySeason, respondShowByEpisode } = require('../controllers/showControllers.js');
@@ -13,11 +10,12 @@ const {
     BASE_URL,
     API_KEY_STRING,
     QUERY_STRING,
-    PRIMARY_RELEASE_YEAR_STRING } = require('../utility.js');
+    PRIMARY_RELEASE_YEAR_STRING,
+} = require('../utility.js');
 
 // Request URLs
 const omdbApiUrl = 'http://www.omdbapi.com/';
-const omdbApiKey = '&apikey=' + OMDB_KEY;
+const omdbApiKey = `&apikey=${OMDB_KEY}`;
 
 // Final search URL
 let finalSearchUrl;

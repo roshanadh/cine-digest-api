@@ -1,5 +1,3 @@
-/* eslint-disable indent */
-/* eslint-disable linebreak-style */
 function respondMovie(fetchResponse) {
     // returns the movie information as a JSON response
     let response;

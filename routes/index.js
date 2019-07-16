@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 const express = require('express');
 
 const router = express.Router();
@@ -25,6 +24,6 @@ router.get('/api/v1/searchs/:query/:season/:episode', CallbackController.getShow
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
-  res.redirect('/api/v1');
+    res.redirect('/api/v1');
 });
 module.exports = router;

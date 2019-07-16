@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 require('dotenv').config();
 
 // Environment variables
@@ -11,11 +10,11 @@ const { QUERY_STRING } = process.env;
 const { PRIMARY_RELEASE_YEAR_STRING } = process.env;
 
 module.exports = {
-  PORT,
-  OMDB_KEY,
-  TMDB_KEY,
-  BASE_URL,
-  API_KEY_STRING,
-  QUERY_STRING,
-  PRIMARY_RELEASE_YEAR_STRING,
+    PORT,
+    OMDB_KEY,
+    TMDB_KEY,
+    BASE_URL,
+    API_KEY_STRING,
+    QUERY_STRING,
+    PRIMARY_RELEASE_YEAR_STRING,
 };
