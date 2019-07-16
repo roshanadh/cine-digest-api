@@ -7,8 +7,8 @@ require('dotenv').config();
 const TMDB_KEY = process.env.TMDB_KEY;
 const PORT = process.env.PORT || 3000;
 const BASE_URL = process.env.BASE_URL;
-const API_KEY_PARAM = process.env.API_KEY_PARAM;
-const QUERY_PARAM = process.env.QUERY_PARAM;
+const API_KEY_STRING = process.env.API_KEY_STRING;
+const QUERY_STRING = process.env.QUERY_STRING;
 
 // Request URLs
 const omdbApiUrl = 'http://www.omdbapi.com/';
@@ -23,8 +23,8 @@ class CallbackController{
     }
 
     getMovieByTitle(req, res){        
-        const requestURL = BASE_URL + API_KEY_PARAM + TMDB_KEY
-            + QUERY_PARAM + req.params.title;
+        const requestURL = BASE_URL + API_KEY_STRING + TMDB_KEY
+            + QUERY_STRING + req.params.title;
 
         request.get(requestURL, (error, response, body) => {
             const responseStatus = parseInt(response.statusCode, 10);
