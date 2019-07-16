@@ -12,7 +12,7 @@ router.get('/api/v1', CallbackController.getLanding);
 router.get('/api/v1/searchm/:title', CallbackController.getMovieByTitle);
 
 // Search movie by title (with year) http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
-router.get('/api/v1/searchm/:query/:year', CallbackController.getMovieByTitleAndYear);
+router.get('/api/v1/searchm/:title/:year', CallbackController.getMovieByTitleAndYear);
 
 // Search TV show by seasons (without episodes); lists all episodes
 // http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
