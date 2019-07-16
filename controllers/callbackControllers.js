@@ -56,7 +56,7 @@ class CallbackController {
             const overviews = [];
             const releaseDates = [];
 
-            if (responseStatus === 200) {
+            if (responseStatus === 200 && totalResults > 0) {
                 const message = true;
                 for (let i = 0; i < totalResults; i++) {
                     voteCounts[i] = resultsArray[i].vote_count;
@@ -83,7 +83,7 @@ class CallbackController {
                 });
             }
             return res.status(404).json({
-                responseStatus,
+                responseStatus: 404,
                 message: 'false',
             });
         });
@@ -117,7 +117,7 @@ class CallbackController {
             const overviews = [];
             const releaseDates = [];
 
-            if (responseStatus === 200) {
+            if (responseStatus === 200 && totalResults > 0) {
                 const message = true;
                 for (let i = 0; i < totalResults; i++) {
                     voteCounts[i] = resultsArray[i].vote_count;
@@ -144,7 +144,7 @@ class CallbackController {
                 });
             }
             return res.status(404).json({
-                responseStatus,
+                responseStatus: 404,
                 message: 'false',
             });
         });
