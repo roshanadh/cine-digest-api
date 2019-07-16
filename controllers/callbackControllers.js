@@ -14,7 +14,6 @@ const {
     API_KEY_STRING,
     QUERY_STRING,
     PRIMARY_RELEASE_YEAR_STRING } = require('../utility.js');
-require('dotenv').config();
 
 // Request URLs
 const omdbApiUrl = 'http://www.omdbapi.com/';
