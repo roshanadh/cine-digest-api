@@ -5,7 +5,6 @@ const {OMDB_KEY} = require('../utility.js');
 require('dotenv').config();
 
 const TMDB_KEY = process.env.TMDB_KEY;
-const PORT = process.env.PORT || 3000;
 const BASE_URL = process.env.BASE_URL;
 const API_KEY_STRING = process.env.API_KEY_STRING;
 const QUERY_STRING = process.env.QUERY_STRING;
