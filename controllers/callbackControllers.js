@@ -1,26 +1,33 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable no-unused-vars */
+/* eslint-disable prefer-template */
+/* eslint-disable no-plusplus */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable indent */
+/* eslint-disable object-curly-newline */
 const request = require('request');
 const respondMovie = require('../controllers/movieControllers.js');
-const {respondShowBySeason, respondShowByEpisode} = require('../controllers/showControllers.js');
-const {OMDB_KEY, TMDB_KEY, BASE_URL, API_KEY_STRING, QUERY_STRING} = require('../utility.js');
+const { respondShowBySeason, respondShowByEpisode } = require('../controllers/showControllers.js');
+const { OMDB_KEY, TMDB_KEY, BASE_URL, API_KEY_STRING, QUERY_STRING } = require('../utility.js');
 require('dotenv').config();
 
 // Request URLs
 const omdbApiUrl = 'http://www.omdbapi.com/';
-const omdbApiKey = "&apikey=" + OMDB_KEY;
+const omdbApiKey = '&apikey=' + OMDB_KEY;
 
 // Final search URL
 let finalSearchUrl;
 
-class CallbackController{
-    getLanding(req, res){
-        return res.send("API backend for Movie Digest");
+class CallbackController {
+    getLanding(req, res) {
+        return res.send('API backend for Movie Digest');
     }
 
-    getMovieByTitle(req, res){        
+    getMovieByTitle(req, res) {
         const requestURL = BASE_URL + API_KEY_STRING + TMDB_KEY
             + QUERY_STRING + req.params.title;
 
-        request.get(requestURL, (error, response, body) => {
+        request.get(requestURL, (_error, response, body) => {
             const responseStatus = parseInt(response.statusCode, 10);
             const responseBody = JSON.parse(body);
 
@@ -46,7 +53,7 @@ class CallbackController{
 
             if (responseStatus === 200) {
                 const message = true;
-                for (var i = 0; i < totalResults; i++) {
+                for (let i = 0; i < totalResults; i++) {
                     voteCounts[i] = resultsArray[i].vote_count;
                     titleIds[i] = resultsArray[i].id;
                     voteAverages[i] = resultsArray[i].vote_average;
@@ -69,92 +76,82 @@ class CallbackController{
                     overviews,
                     releaseDates,
                 });
-            } else {
-                return res.status(404).json({
-                    responseStatus,
-                    message: 'false',
-                });
+            }
+            return res.status(404).json({
+                responseStatus,
+                message: 'false',
+            });
+        });
+    }
+
+    getMovieByTitleAndYear(req, res) {
+        const { query } = req.params; // pulp+fiction
+        const { year } = req.params;
+
+        finalSearchUrl = omdbApiUrl + '?t=' + query + '&y=' + year + omdbApiKey;
+        console.log(finalSearchUrl);
+
+        request.get(finalSearchUrl, (error, resp, _body) => {
+            if (error) console.log(error);
+            else {
+                console.log(resp);
+
+                // response.body is a JSON object
+                const fetchResponse = JSON.parse(resp.body);
+                const response = respondMovie(fetchResponse);
+
+                if (response.Message == 'True') res.status(200);
+                else res.status(404);
+                res.send(response);
             }
         });
     }
 
-    getMovieByTitleAndYear(req, res){
-        let query = req.params.query;   // pulp+fiction
-        let year = req.params.year;
+    getShowBySeason(req, res) {
+        const { query } = req.params; // Game+of+Thrones
+        const { season } = req.params; // 1
 
-        finalSearchUrl = omdbApiUrl + '?t=' + query + "&y="+ year + omdbApiKey;
+        finalSearchUrl = omdbApiUrl + '?t=' + query + '&season=' + season + omdbApiKey;
         console.log(finalSearchUrl);
 
-        request.get(finalSearchUrl, (error, resp, body) => {
-            if(error)
-                console.log(err);
-            else{
+        request.get(finalSearchUrl, (error, resp, _body) => {
+            if (error) console.log(error);
+            else {
                 console.log(resp);
 
                 // response.body is a JSON object
-                let fetchResponse = JSON.parse(resp.body); 
-                let response = respondMovie(fetchResponse);
+                const fetchResponse = JSON.parse(resp.body);
+                const response = respondShowBySeason(fetchResponse);
 
-                if(response.Message == "True")
-                    res.status(200);
-                else
-                    res.status(404);
-                res.send(response);   
+                if (response.Message == 'True') res.status(200);
+                else res.status(404);
+                res.send(response);
             }
         });
     }
 
-    getShowBySeason(req, res){
-        let query = req.params.query;       // Game+of+Thrones
-        let season = req.params.season;     //1
+    getShowBySeasonAndEpisode(req, res) {
+        const { query } = req.params; // Game+of+Thrones
+        const { season } = req.params; // 1
+        const { episode } = req.params; // 1
 
-        finalSearchUrl = omdbApiUrl + '?t=' + query + "&season="+ season + omdbApiKey;
+        finalSearchUrl = omdbApiUrl + '?t=' + query + '&season=' + season + '&episode=' + episode + omdbApiKey;
         console.log(finalSearchUrl);
 
-        request.get(finalSearchUrl, (error, resp, body) => {
-            if(error)
-                console.log(err);
-            else{
+        request.get(finalSearchUrl, (error, resp, _body) => {
+            if (error) console.log(error);
+            else {
                 console.log(resp);
 
                 // response.body is a JSON object
-                let fetchResponse = JSON.parse(resp.body); 
-                let response = respondShowBySeason(fetchResponse);
+                const fetchResponse = JSON.parse(resp.body);
+                const response = respondShowByEpisode(fetchResponse);
 
-                if(response.Message == "True")
-                    res.status(200);
-                else
-                    res.status(404);
-                res.send(response);   
+                if (response.Message == 'True') res.status(200);
+                else res.status(404);
+                res.send(response);
             }
         });
-    }
-
-    getShowBySeasonAndEpisode(req, res){
-        let query = req.params.query;       // Game+of+Thrones
-        let season = req.params.season;     //1
-        let episode = req.params.episode;     //1
-    
-        finalSearchUrl = omdbApiUrl + '?t=' + query + "&season="+ season + "&episode=" + episode + omdbApiKey;
-        console.log(finalSearchUrl);
-    
-        request.get(finalSearchUrl, (error, resp, body) => {
-            if(error)
-                console.log(err);
-            else{
-                console.log(resp);
-    
-                // response.body is a JSON object
-                let fetchResponse = JSON.parse(resp.body); 
-                let response = respondShowByEpisode(fetchResponse);
-    
-                if(response.Message == "True")
-                    res.status(200);
-                else
-                    res.status(404);
-                res.send(response);   
-            }
-        });    
     }
 }
 

@@ -1,4 +1,6 @@
+/* eslint-disable linebreak-style */
 const express = require('express');
+
 const router = express.Router();
 const CallbackController = require('../controllers/callbackControllers.js');
 
@@ -12,7 +14,7 @@ router.get('/api/v1/searchm/:title', CallbackController.getMovieByTitle);
 // Search movie by title (with year) http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
 router.get('/api/v1/searchm/:query/:year', CallbackController.getMovieByTitleAndYear);
 
-// Search TV show by seasons (without episodes); lists all episodes 
+// Search TV show by seasons (without episodes); lists all episodes
 // http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
 router.get('/api/v1/searchs/:query/:season', CallbackController.getShowBySeason);
 
@@ -23,6 +25,6 @@ router.get('/api/v1/searchs/:query/:season/:episode', CallbackController.getShow
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
-    res.redirect('/api/v1');
+  res.redirect('/api/v1');
 });
 module.exports = router;

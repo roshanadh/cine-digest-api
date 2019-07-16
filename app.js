@@ -1,7 +1,9 @@
+/* eslint-disable indent */
+/* eslint-disable linebreak-style */
 // Imports
 const app = require('express')();
 const router = require('./routes/index.js');
-const {PORT} = require('./utility.js');
+const { PORT } = require('./utility.js');
 
 app.set('json spaces', 2);
 
