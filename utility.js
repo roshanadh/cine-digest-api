@@ -9,10 +9,10 @@ const API_KEY_STRING = process.env.API_KEY_STRING;
 const QUERY_STRING = process.env.QUERY_STRING;
 
 module.exports = {
-    PORT: PORT,
-    OMDB_KEY: OMDB_KEY,
-    TMDB_KEY: TMDB_KEY,
-    BASE_URL: BASE_URL,
-    API_KEY_STRING: API_KEY_STRING,
-    QUERY_STRING: QUERY_STRING,
+    PORT,
+    OMDB_KEY,
+    TMDB_KEY,
+    BASE_URL,
+    API_KEY_STRING,
+    QUERY_STRING,
 }
