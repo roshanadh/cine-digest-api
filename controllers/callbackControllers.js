@@ -1,13 +1,8 @@
 const request = require('request');
 const respondMovie = require('../controllers/movieControllers.js');
 const {respondShowBySeason, respondShowByEpisode} = require('../controllers/showControllers.js');
-const {OMDB_KEY} = require('../utility.js');
+const {OMDB_KEY, TMDB_KEY, BASE_URL, API_KEY_STRING, QUERY_STRING} = require('../utility.js');
 require('dotenv').config();
-
-const TMDB_KEY = process.env.TMDB_KEY;
-const BASE_URL = process.env.BASE_URL;
-const API_KEY_STRING = process.env.API_KEY_STRING;
-const QUERY_STRING = process.env.QUERY_STRING;
 
 // Request URLs
 const omdbApiUrl = 'http://www.omdbapi.com/';
