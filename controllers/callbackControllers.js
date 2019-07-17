@@ -26,7 +26,8 @@ class CallbackController {
     }
 
     getMovieByTitle(req, res) {
-        const requestURL = BASE_URL + API_KEY_STRING + TMDB_KEY
+        const PATH = '/search/movie';
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY
             + QUERY_STRING + req.params.title;
 
         request.get(requestURL, (_error, response, body) => {
@@ -87,7 +88,8 @@ class CallbackController {
     }
 
     getMovieByTitleAndYear(req, res) {
-        const requestURL = BASE_URL + API_KEY_STRING + TMDB_KEY
+        const PATH = '/search/movie';
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY
             + QUERY_STRING + req.params.title + PRIMARY_RELEASE_YEAR_STRING + req.params.year;
 
         request.get(requestURL, (error, response, body) => {
