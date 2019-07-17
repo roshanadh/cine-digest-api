@@ -1,2 +1,2 @@
-# movie-digest-api
-API backend for Movie Digest
+# cine-digest-api
+API backend for Cine Digest
