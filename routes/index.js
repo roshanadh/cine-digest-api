@@ -7,11 +7,14 @@ const CallbackController = require('../controllers/callbackControllers.js');
 // Landing route
 router.get('/api/v1', CallbackController.getLanding);
 
-// Search movie by title (without year) http://www.omdbapi.com/?t=Pulp+Fiction
+// Search movies by title (without year) http://www.omdbapi.com/?t=Pulp+Fiction
 router.get('/api/v1/searchm/:title', CallbackController.getMovieByTitle);
 
-// Search movie by title (with year) http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
+// Search movies by title (with year) http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
 router.get('/api/v1/searchm/:title/:year', CallbackController.getMovieByTitleAndYear);
+
+// Get movie by ID http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
+router.get('/api/v1/getm/:id', CallbackController.getMovieById);
 
 // Search TV show by seasons (without episodes); lists all episodes
 // http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
