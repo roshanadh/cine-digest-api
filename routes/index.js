@@ -24,6 +24,8 @@ router.get('/api/v1/searchs/:query/:season/:episode', CallbackController.getShow
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
+    // TODO
+    // Redirect to a 404 page
     res.redirect('/api/v1');
 });
 module.exports = router;
