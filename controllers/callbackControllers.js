@@ -23,7 +23,7 @@ let finalSearchUrl;
 
 class CallbackController {
     getLanding(req, res) {
-        return res.send('API backend for Movie Digest');
+        return res.status(200).send('API backend for Movie Digest');
     }
 
     getMovieByTitle(req, res) {
