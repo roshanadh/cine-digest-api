@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable prefer-template */
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
@@ -146,6 +147,59 @@ class CallbackController {
                 responseStatus: 404,
                 message: 'false',
             });
+        });
+    }
+
+    getMovieById(req, res) {
+        const PATH = `/movie/${req.params.id}`;
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
+        request.get(requestURL, (error, response, body) => {
+            const responseStatus = parseInt(response.statusCode, 10);
+            const responseBody = JSON.parse(body);
+
+            // Separating concerns
+            if (responseStatus === 200 && !isNaN(req.params.id)) {
+                // TODO
+                // Fix snake_case to camelCase
+                const {
+                    backdrop_path,
+                    budget,
+                    genres,
+                    homepage,
+                    id,
+                    original_language,
+                    overview,
+                    poster_path,
+                    release_date,
+                    revenue,
+                    runtime,
+                    status,
+                    tagline,
+                    title,
+                    vote_average,
+                    vote_count,
+                } = responseBody;
+
+                return res.status(200).json({
+                    id,
+                    title,
+                    tagline,
+                    vote_average,
+                    vote_count,
+                    runtime,
+                    status,
+                    genres,
+                    backdrop_path,
+                    budget,
+                    revenue,
+                    homepage,
+                    original_language,
+                    overview,
+                    poster_path,
+                    release_date,
+                });
+            }
+            return res.sendStatus(404);
         });
     }
 
