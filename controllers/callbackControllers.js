@@ -81,10 +81,7 @@ class CallbackController {
                     releaseDates,
                 });
             }
-            return res.status(404).json({
-                responseStatus: 404,
-                message: 'false',
-            });
+            return res.sendStatus(404);
         });
     }
 
@@ -143,10 +140,7 @@ class CallbackController {
                     releaseDates,
                 });
             }
-            return res.status(404).json({
-                responseStatus: 404,
-                message: 'false',
-            });
+            return res.sendStatus(404);
         });
     }
 
