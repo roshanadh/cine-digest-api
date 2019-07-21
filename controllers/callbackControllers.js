@@ -26,7 +26,7 @@ class CallbackController {
         return res.status(200).send('API backend for Movie Digest');
     }
 
-    getMovieByTitle(req, res) {
+    searchMoviesByTitle(req, res) {
         const PATH = '/search/movie';
         const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY
             + QUERY_STRING + req.params.title;
@@ -85,7 +85,7 @@ class CallbackController {
         });
     }
 
-    getMovieByTitleAndYear(req, res) {
+    searchMoviesByTitleAndYear(req, res) {
         const PATH = '/search/movie';
         const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY
             + QUERY_STRING + req.params.title + PRIMARY_RELEASE_YEAR_STRING + req.params.year;
