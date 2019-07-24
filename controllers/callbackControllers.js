@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 const request = require('request');
+const path = require('path');
 const axios = require('axios');
 const respondMovie = require('../controllers/movieControllers.js');
 const { respondShowBySeason, respondShowByEpisode } = require('../controllers/showControllers.js');
@@ -21,7 +22,7 @@ let finalSearchUrl;
 
 class CallbackController {
     getLanding(req, res) {
-        return res.status(200).send('API backend for Movie Digest');
+        return res.status(200).sendFile(path.join(__dirname, '../public/index.html'));
     }
 
     searchMoviesByTitle(req, res) {
