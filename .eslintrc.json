@@ -17,6 +17,10 @@
     "rules": {
         "linebreak-style": ["error", "windows"],
         "indent": ["error", 4],
-        "allowForLoopAfterthoughts": true
+        "allowForLoopAfterthoughts": true,
+        "class-methods-use-this": "off",
+        "no-plusplus": "off",
+        "prefer-template": "off",
+        "no-restricted-globals": "off"
     }
 }
