@@ -38,10 +38,10 @@ class CallbackController {
                 const parsedTotalResults = parseInt(responseBody.total_results, 10);
 
                 /*
-                *   There are at most 20 results per page.
-                *   Cine Digest API is to return information on the
-                   first 20 (if there are) titles.
-            */
+                    *   There are at most 20 results per page.
+                    *   Cine Digest API is to return information on the
+                        first 20 (if there are) titles.
+                */
 
                 const totalResults = parsedTotalResults <= 20 ? parsedTotalResults : 20;
                 const resultsArray = responseBody.results;
