@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const CallbackController = require('../controllers/callbackControllers.js');
 
@@ -6,18 +7,28 @@ const CallbackController = require('../controllers/callbackControllers.js');
 // Landing route
 router.get('/api/v1', CallbackController.getLanding);
 
-//Search movie by title (without year) http://www.omdbapi.com/?t=Pulp+Fiction
-router.get('/api/v1/searchm/:query', CallbackController.getMovieByTitle);
+// Search movies by title (without year) http://www.omdbapi.com/?t=Pulp+Fiction
+router.get('/api/v1/searchm/:title', CallbackController.searchMoviesByTitle);
 
-//Search movie by title (with year) http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
-router.get('/api/v1/searchm/:query/:year', CallbackController.getMovieByTitleAndYear);
+// Search movies by title (with year) http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
+router.get('/api/v1/searchm/:title/:year', CallbackController.searchMoviesByTitleAndYear);
 
-// Search TV show by seasons (without episodes); lists all episodes 
-//http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
+// Get movie by ID http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
+router.get('/api/v1/getm/:id', CallbackController.getMovieById);
+
+// Search TV show by seasons (without episodes); lists all episodes
+// http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
 router.get('/api/v1/searchs/:query/:season', CallbackController.getShowBySeason);
 
 // Search TV show by seasons (with episodes)
-//http://www.omdbapi.com/?t=Game+of+Thrones&season=1&episode=1
+// http://www.omdbapi.com/?t=Game+of+Thrones&season=1&episode=1
 router.get('/api/v1/searchs/:query/:season/:episode', CallbackController.getShowBySeasonAndEpisode);
 
+// Error handling
+// Redirect to the landing route
+router.get('*', (req, res) => {
+    // TODO
+    // Redirect to a 404 page
+    res.redirect('/api/v1');
+});
 module.exports = router;

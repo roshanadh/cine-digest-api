@@ -1,74 +1,72 @@
-function respondShowBySeason(fetchResponse){
+function respondShowBySeason(fetchResponse) {
     // returns the show information as a JSON response
     let response;
 
-    if(fetchResponse.Response == "False"){
-        response = {"Message": "False"};
-    }
-    else{
-        let message = "True";
-        let showTitle = fetchResponse.Title;
-        let showSeason = fetchResponse.Season;
-        let showTotalSeasons = fetchResponse.totalSeasons; // display as 1/8 : current/total
-        let showTotalEpisodesInSeason = fetchResponse.Episodes.length; 
-        let showEpisodeName = [];
+    if (fetchResponse.Response == 'False') {
+        response = { Message: 'False' };
+    } else {
+        const message = 'True';
+        const showTitle = fetchResponse.Title;
+        const showSeason = fetchResponse.Season;
+        const showTotalSeasons = fetchResponse.totalSeasons; // display as 1/8 : current/total
+        const showTotalEpisodesInSeason = fetchResponse.Episodes.length;
+        const showEpisodeName = [];
         // Get episodes
-        for(i = 0; i < fetchResponse.Episodes.length; i++){
-            showEpisodeName[i] = fetchResponse.Episodes[i].Title; 
+        for (let i = 0; i < fetchResponse.Episodes.length; i++) {
+            showEpisodeName[i] = fetchResponse.Episodes[i].Title;
         }
 
         response = {
-            "Message": message,
-            "Title": showTitle,
-            "Season": showSeason,
-            "totalSeasonsOfShow": showTotalSeasons,
-            "totalEpisodesInSeason": showTotalEpisodesInSeason,
-            "Episodes": showEpisodeName,
-        }
+            Message: message,
+            Title: showTitle,
+            Season: showSeason,
+            totalSeasonsOfShow: showTotalSeasons,
+            totalEpisodesInSeason: showTotalEpisodesInSeason,
+            Episodes: showEpisodeName,
+        };
     }
     console.log(response);
     return response;
 }
 
-function respondShowByEpisode(fetchResponse){
+function respondShowByEpisode(fetchResponse) {
     // returns the show information as a JSON response
     let response;
 
-    if(fetchResponse.Response == "False"){
-        response = {"Message": "False"};
-    }
-    else{
-        let message = "True";
-        let episodeTitle = fetchResponse.Title;
-        let episodeYear = fetchResponse.Year;
-        let episodeRated = fetchResponse.Rated;
-        let episodeSeason = fetchResponse.Season;
-        let episodeNumber = fetchResponse.Episode;
-        let episodeRuntime = fetchResponse.runtime;
-        let episodeGenre = fetchResponse.Genre;
-        let episodeDirector = fetchResponse.Director;
-        let episodeActors = fetchResponse.Actors;
-        let episodePlot = fetchResponse.Plot;
-        let episodeLanguage = fetchResponse.Language;
-        let episodeImdbRating = fetchResponse.imdbRating;
-        let posterPath = fetchResponse.Poster;
+    if (fetchResponse.Response == 'False') {
+        response = { Message: 'False' };
+    } else {
+        const message = 'True';
+        const episodeTitle = fetchResponse.Title;
+        const episodeYear = fetchResponse.Year;
+        const episodeRated = fetchResponse.Rated;
+        const episodeSeason = fetchResponse.Season;
+        const episodeNumber = fetchResponse.Episode;
+        const episodeRuntime = fetchResponse.runtime;
+        const episodeGenre = fetchResponse.Genre;
+        const episodeDirector = fetchResponse.Director;
+        const episodeActors = fetchResponse.Actors;
+        const episodePlot = fetchResponse.Plot;
+        const episodeLanguage = fetchResponse.Language;
+        const episodeImdbRating = fetchResponse.imdbRating;
+        const posterPath = fetchResponse.Poster;
 
         response = {
-            "Message": message,
-            "Title": episodeTitle,
-            "Year": episodeYear,
-            "Rated": episodeRated,
-            "Season": episodeSeason,
-            "Episode": episodeNumber,
-            "Runtime": episodeRuntime,
-            "Genre": episodeGenre,
-            "Director": episodeDirector,
-            "Actors": episodeActors,
-            "Plot": episodePlot,
-            "Language": episodeLanguage,
-            "imdbRating": episodeImdbRating,
-            "Poster": posterPath
-        }
+            Message: message,
+            Title: episodeTitle,
+            Year: episodeYear,
+            Rated: episodeRated,
+            Season: episodeSeason,
+            Episode: episodeNumber,
+            Runtime: episodeRuntime,
+            Genre: episodeGenre,
+            Director: episodeDirector,
+            Actors: episodeActors,
+            Plot: episodePlot,
+            Language: episodeLanguage,
+            imdbRating: episodeImdbRating,
+            Poster: posterPath,
+        };
     }
     console.log(response);
     return response;
