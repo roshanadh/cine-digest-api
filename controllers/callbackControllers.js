@@ -1,8 +1,5 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable prefer-template */
-/* eslint-disable no-plusplus */
-/* eslint-disable class-methods-use-this */
 const request = require('request');
+const axios = require('axios');
 const respondMovie = require('../controllers/movieControllers.js');
 const { respondShowBySeason, respondShowByEpisode } = require('../controllers/showControllers.js');
 const {
@@ -228,7 +225,7 @@ class CallbackController {
         finalSearchUrl = omdbApiUrl + '?t=' + query + '&season=' + season + '&episode=' + episode + omdbApiKey;
         console.log(finalSearchUrl);
 
-        request.get(finalSearchUrl, (error, resp, _body) => {
+        request.get(finalSearchUrl, (error, resp, body) => {
             if (error) console.log(error);
             else {
                 console.log(resp);
