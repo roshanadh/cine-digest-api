@@ -29,58 +29,62 @@ class CallbackController {
         const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY
             + QUERY_STRING + req.params.title;
 
-        request.get(requestURL, (_error, response, body) => {
-            const responseStatus = parseInt(response.statusCode, 10);
-            const responseBody = JSON.parse(body);
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
 
-            // Separating concerns
-            const parsedTotalResults = parseInt(responseBody.total_results, 10);
+                // Separating concerns
+                const parsedTotalResults = parseInt(responseBody.total_results, 10);
 
-            /*
+                /*
                 *   There are at most 20 results per page.
                 *   Cine Digest API is to return information on the
                    first 20 (if there are) titles.
             */
 
-            const totalResults = parsedTotalResults <= 20 ? parsedTotalResults : 20;
-            const resultsArray = responseBody.results;
-            const voteCounts = [];
-            const titleIds = [];
-            const voteAverages = [];
-            const titles = [];
-            const posterPaths = [];
-            const languages = [];
-            const overviews = [];
-            const releaseDates = [];
+                const totalResults = parsedTotalResults <= 20 ? parsedTotalResults : 20;
+                const resultsArray = responseBody.results;
+                const voteCounts = [];
+                const titleIds = [];
+                const voteAverages = [];
+                const titles = [];
+                const posterPaths = [];
+                const languages = [];
+                const overviews = [];
+                const releaseDates = [];
 
-            if (responseStatus === 200 && totalResults > 0) {
-                const message = true;
-                for (let i = 0; i < totalResults; i++) {
-                    voteCounts[i] = resultsArray[i].vote_count;
-                    titleIds[i] = resultsArray[i].id;
-                    voteAverages[i] = resultsArray[i].vote_average;
-                    titles[i] = resultsArray[i].title;
-                    posterPaths[i] = resultsArray[i].poster_path;
-                    languages[i] = resultsArray[i].original_language;
-                    overviews[i] = resultsArray[i].overview;
-                    releaseDates[i] = resultsArray[i].release_date;
+                if (responseStatus === 200 && totalResults > 0) {
+                    const message = true;
+                    for (let i = 0; i < totalResults; i++) {
+                        voteCounts[i] = resultsArray[i].vote_count;
+                        titleIds[i] = resultsArray[i].id;
+                        voteAverages[i] = resultsArray[i].vote_average;
+                        titles[i] = resultsArray[i].title;
+                        posterPaths[i] = resultsArray[i].poster_path;
+                        languages[i] = resultsArray[i].original_language;
+                        overviews[i] = resultsArray[i].overview;
+                        releaseDates[i] = resultsArray[i].release_date;
+                    }
+                    return res.status(200).json({
+                        responseStatus,
+                        message,
+                        totalResults,
+                        voteCounts,
+                        titleIds,
+                        voteAverages,
+                        titles,
+                        posterPaths,
+                        languages,
+                        overviews,
+                        releaseDates,
+                    });
                 }
-                return res.status(200).json({
-                    responseStatus,
-                    message,
-                    totalResults,
-                    voteCounts,
-                    titleIds,
-                    voteAverages,
-                    titles,
-                    posterPaths,
-                    languages,
-                    overviews,
-                    releaseDates,
-                });
-            }
-            return res.sendStatus(404);
-        });
+                return res.sendStatus(404);
+            })
+            .catch((error) => {
+                res.sendStatus(error.response.status);
+            });
     }
 
     searchMoviesByTitleAndYear(req, res) {
