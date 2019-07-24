@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const request = require('request');
 const axios = require('axios');
 const respondMovie = require('../controllers/movieControllers.js');
@@ -142,56 +143,129 @@ class CallbackController {
     }
 
     getMovieById(req, res) {
-        const PATH = `/movie/${req.params.id}`;
-        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
-        request.get(requestURL, (error, response, body) => {
-            const responseStatus = parseInt(response.statusCode, 10);
-            const responseBody = JSON.parse(body);
+        let PATH = `/movie/${req.params.id}`;
+        let requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
 
-            // Separating concerns
-            if (responseStatus === 200 && !isNaN(req.params.id)) {
-                // TODO
-                // Fix snake_case to camelCase
-                const {
-                    backdrop_path,
-                    budget,
-                    genres,
-                    homepage,
-                    id,
-                    original_language,
-                    overview,
-                    poster_path,
-                    release_date,
-                    revenue,
-                    runtime,
-                    status,
-                    tagline,
-                    title,
-                    vote_average,
-                    vote_count,
-                } = responseBody;
+        // Get Movie information
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
+                if (responseStatus === 200) {
+                    const {
+                        backdrop_path,
+                        budget,
+                        genres,
+                        homepage,
+                        id,
+                        original_language,
+                        overview,
+                        poster_path,
+                        release_date,
+                        revenue,
+                        runtime,
+                        status,
+                        tagline,
+                        title,
+                        vote_average,
+                        vote_count,
+                    } = responseBody;
 
-                return res.status(200).json({
-                    id,
-                    title,
-                    tagline,
-                    vote_average,
-                    vote_count,
-                    runtime,
-                    status,
-                    genres,
-                    backdrop_path,
-                    budget,
-                    revenue,
-                    homepage,
-                    original_language,
-                    overview,
-                    poster_path,
-                    release_date,
-                });
-            }
-            return res.sendStatus(404);
-        });
+                    // Get credits
+                    PATH = `/movie/${req.params.id}/credits`;
+                    requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
+                    axios.get(requestURL)
+                        .then((response) => {
+                            const responseStatus = parseInt(response.status, 10);
+                            const responseBody = response.data;
+
+                            const credits = [];
+                            const creditsProfilePath = [];
+                            if (responseStatus === 200) {
+                                const { cast } = responseBody;
+                                const castLength = cast.length <= 6 ? cast.length : 6;
+                                for (let i = 0; i < castLength; i++) {
+                                    credits[i] = cast[i].name;
+                                    creditsProfilePath[i] = cast[i].profile_path;
+                                }
+                                return res.status(200).json({
+                                    id,
+                                    title,
+                                    tagline,
+                                    vote_average,
+                                    vote_count,
+                                    runtime,
+                                    status,
+                                    genres,
+                                    credits,
+                                    creditsProfilePath,
+                                    backdrop_path,
+                                    budget,
+                                    revenue,
+                                    homepage,
+                                    original_language,
+                                    overview,
+                                    poster_path,
+                                    release_date,
+                                });
+                            }
+                        })
+                        .catch((error) => {
+                            res.json(error);
+                        });
+                }
+            })
+            .catch((error) => {
+                res.json(error);
+            });
+        // request.get(requestURL, (error, response, body) => {
+        //     const responseStatus = parseInt(response.statusCode, 10);
+        //     const responseBody = JSON.parse(body);
+
+        //     // Separating concerns
+        //     if (responseStatus === 200 && !isNaN(req.params.id)) {
+        //         // TODO
+        //         // Fix snake_case to camelCase
+        //         const {
+        //             backdrop_path,
+        //             budget,
+        //             genres,
+        //             homepage,
+        //             id,
+        //             original_language,
+        //             overview,
+        //             poster_path,
+        //             release_date,
+        //             revenue,
+        //             runtime,
+        //             status,
+        //             tagline,
+        //             title,
+        //             vote_average,
+        //             vote_count,
+        //         } = responseBody;
+
+        //         return res.status(200).json({
+        //             id,
+        //             title,
+        //             tagline,
+        //             vote_average,
+        //             vote_count,
+        //             runtime,
+        //             status,
+        //             genres,
+        //             backdrop_path,
+        //             budget,
+        //             revenue,
+        //             homepage,
+        //             original_language,
+        //             overview,
+        //             poster_path,
+        //             release_date,
+        //         });
+        //     }
+        //     return res.sendStatus(404);
+        // });
     }
 
     getShowBySeason(req, res) {
