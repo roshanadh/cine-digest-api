@@ -229,6 +229,69 @@ class CallbackController {
             });
     }
 
+    searchShowsByTitle(req, res) {
+        const PATH = '/search/tv';
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY
+            + QUERY_STRING + req.params.title;
+
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
+
+                // Separating concerns
+                const parsedTotalResults = parseInt(responseBody.total_results, 10);
+
+                /*
+                    *   There are at most 20 results per page.
+                    *   Cine Digest API is to return information on the
+                        first 20 (if there are) titles.
+                */
+
+                const totalResults = parsedTotalResults <= 20 ? parsedTotalResults : 20;
+                const resultsArray = responseBody.results;
+                const voteCounts = [];
+                const titleIds = [];
+                const voteAverages = [];
+                const titles = [];
+                const posterPaths = [];
+                const languages = [];
+                const overviews = [];
+                const firstAirDates = [];
+
+                if (responseStatus === 200 && totalResults > 0) {
+                    const message = true;
+                    for (let i = 0; i < totalResults; i++) {
+                        voteCounts[i] = resultsArray[i].vote_count;
+                        titleIds[i] = resultsArray[i].id;
+                        voteAverages[i] = resultsArray[i].vote_average;
+                        titles[i] = resultsArray[i].name;
+                        posterPaths[i] = resultsArray[i].poster_path;
+                        languages[i] = resultsArray[i].original_language;
+                        overviews[i] = resultsArray[i].overview;
+                        firstAirDates[i] = resultsArray[i].first_air_date;
+                    }
+                    return res.status(200).json({
+                        responseStatus,
+                        message,
+                        totalResults,
+                        voteCounts,
+                        titleIds,
+                        voteAverages,
+                        titles,
+                        posterPaths,
+                        languages,
+                        overviews,
+                        firstAirDates,
+                    });
+                }
+                return res.sendStatus(404);
+            })
+            .catch((error) => {
+                res.sendStatus(error.response.status);
+            });
+    }
+
     getShowBySeason(req, res) {
         const { query } = req.params; // Game+of+Thrones
         const { season } = req.params; // 1
