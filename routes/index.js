@@ -7,13 +7,16 @@ const CallbackController = require('../controllers/callbackControllers.js');
 // Landing route
 router.get('/api/v1', CallbackController.getLanding);
 
-// Search movies by title (without year) http://www.omdbapi.com/?t=Pulp+Fiction
+// Search movies by title (without year)
+//  https://api.themoviedb.org/3/search/movie?api_key={}&query={}
 router.get('/api/v1/searchm/:title', CallbackController.searchMoviesByTitle);
 
-// Search movies by title (with year) http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
+// Search movies by title (with year)
+// https://api.themoviedb.org/3/search/movie?api_key={}&query={}&primary_release_year={}
 router.get('/api/v1/searchm/:title/:year', CallbackController.searchMoviesByTitleAndYear);
 
-// Get movie by ID http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
+// Get movie by ID
+// https://api.themoviedb.org/3/movie/{movie-id}?api_key={}
 router.get('/api/v1/getm/:id', CallbackController.getMovieById);
 
 // Search TV shows by title
