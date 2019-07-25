@@ -16,7 +16,11 @@ router.get('/api/v1/searchm/:title/:year', CallbackController.searchMoviesByTitl
 // Get movie by ID http://www.omdbapi.com/?t=Pulp+Fiction&y=1994
 router.get('/api/v1/getm/:id', CallbackController.getMovieById);
 
-// Search TV show by seasons (without episodes); lists all episodes
+// Search TV shows by title
+// https://api.themoviedb.org/3/search/tv?api_key={}&query={}
+router.get('/api/v1/searchs/:title', CallbackController.searchShowsByTitle);
+
+// Search TV shows by seasons (without episodes); lists all episodes
 // http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
 router.get('/api/v1/searchs/:query/:season', CallbackController.getShowBySeason);
 
