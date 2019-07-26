@@ -2,7 +2,7 @@
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
-const respondMovie = require('../controllers/movieControllers.js');
+// const respondMovie = require('../controllers/movieControllers.js');
 const {
     respondShowBySeason,
     respondShowByEpisode,
