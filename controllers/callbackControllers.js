@@ -1,4 +1,7 @@
 /* eslint-disable no-shadow */
+
+// TODO
+// Convert snake_case to camelCase in every response
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
@@ -286,6 +289,88 @@ class CallbackController {
                         languages,
                         overviews,
                         firstAirDates,
+                    });
+                }
+                return res.sendStatus(404);
+            })
+            .catch((error) => {
+                res.sendStatus(error.response.status);
+            });
+    }
+
+    getShowById(req, res) {
+        const PATH = `/tv/${req.params.id}`;
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
+
+                if (responseStatus === 200) {
+                    let {
+                        backdrop_path,
+                        created_by,
+                        episode_run_time,
+                        first_air_date,
+                        genres,
+                        homepage,
+                        id,
+                        last_air_date,
+                        name,
+                        next_episode_to_air,
+                        networks,
+                        number_of_episodes,
+                        number_of_seasons,
+                        overview,
+                        poster_path,
+                        seasons,
+                        status,
+                        vote_average,
+                        vote_count
+                    } = responseBody;
+
+                    // Set length = 0 if returned null by TMDB API
+                    const createdByLength = created_by.length > 0 ? created_by.length : 0;
+                    const episodeRunTimeLength = episode_run_time.length > 0 ? episode_run_time.length : 0;
+                    const networksLength = networks.length > 0 ? networks.length : 0;
+                    const seasonsLength = seasons.length > 0 ? seasons.length : 0;
+
+                    const createdBy = [];
+                    const episodeRunTime = [];
+
+                    for (let i = 0; i < createdByLength; i++)
+                        createdBy[i] = created_by[i].name;
+
+                    for (let i = 0; i < episodeRunTimeLength; i++)
+                        episodeRunTime[i] = episode_run_time[i];
+
+                    for (let i = 0; i < networksLength; i++)
+                        networks[i] = networks[i].name;
+
+                    for (let i = 0; i < seasonsLength; i++)
+                        seasons[i] = seasons[i].name;
+
+                    return res.status(200).json({
+                        responseStatus,
+                        name,
+                        id,
+                        backdrop_path,
+                        createdBy,
+                        poster_path,
+                        seasons,
+                        status,
+                        vote_average,
+                        vote_count,
+                        episodeRunTime,
+                        first_air_date,
+                        last_air_date,
+                        genres,
+                        homepage,
+                        next_episode_to_air,
+                        networks,
+                        number_of_episodes,
+                        number_of_seasons,
+                        overview,
                     });
                 }
                 return res.sendStatus(404);

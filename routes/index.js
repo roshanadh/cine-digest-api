@@ -23,6 +23,10 @@ router.get('/api/v1/getm/:id', CallbackController.getMovieById);
 // https://api.themoviedb.org/3/search/tv?api_key={}&query={}
 router.get('/api/v1/searchs/:title', CallbackController.searchShowsByTitle);
 
+// Get TV show by id
+// https://api.themoviedb.org/3/tv/{tv-show-id}?api_key={}
+router.get('/api/v1/gets/:id', CallbackController.getShowById);
+
 // Search TV shows by seasons (without episodes); lists all episodes
 // http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
 router.get('/api/v1/searchs/:query/:season', CallbackController.getShowBySeason);
