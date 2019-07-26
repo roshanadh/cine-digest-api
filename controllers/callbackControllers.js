@@ -3,7 +3,10 @@ const request = require('request');
 const path = require('path');
 const axios = require('axios');
 const respondMovie = require('../controllers/movieControllers.js');
-const { respondShowBySeason, respondShowByEpisode } = require('../controllers/showControllers.js');
+const {
+    respondShowBySeason,
+    respondShowByEpisode,
+} = require('../controllers/showControllers.js');
 const {
     OMDB_KEY,
     TMDB_KEY,
