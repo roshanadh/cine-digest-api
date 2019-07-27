@@ -5,26 +5,14 @@
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
-// const respondMovie = require('../controllers/movieControllers.js');
+
 const {
-    respondShowBySeason,
-    respondShowByEpisode,
-} = require('../controllers/showControllers.js');
-const {
-    OMDB_KEY,
     TMDB_KEY,
     BASE_URL,
     API_KEY_STRING,
     QUERY_STRING,
     PRIMARY_RELEASE_YEAR_STRING,
 } = require('../utility.js');
-
-// Request URLs
-const omdbApiUrl = 'http://www.omdbapi.com/';
-const omdbApiKey = `&apikey=${OMDB_KEY}`;
-
-// Final search URL
-let finalSearchUrl;
 
 class CallbackController {
     getLanding(req, res) {
