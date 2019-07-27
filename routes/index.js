@@ -31,10 +31,6 @@ router.get('/api/v1/gets/:id', CallbackController.getShowById);
 // https://api.themoviedb.org/3/tv/{tv-show-id}/season/{season-number}?api_key={}
 router.get('/api/v1/gets/:id/:seasonNo', CallbackController.getSeason);
 
-// Search TV show by seasons (with episodes)
-// http://www.omdbapi.com/?t=Game+of+Thrones&season=1&episode=1
-router.get('/api/v1/searchs/:query/:season/:episode', CallbackController.getShowBySeasonAndEpisode);
-
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
