@@ -2,7 +2,6 @@
 
 // TODO
 // Convert snake_case to camelCase in every response
-const request = require('request');
 const path = require('path');
 const axios = require('axios');
 
