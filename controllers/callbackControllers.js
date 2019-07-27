@@ -431,30 +431,6 @@ class CallbackController {
                 res.sendStatus(error.response.status);
             });
     }
-
-    getShowBySeasonAndEpisode(req, res) {
-        const { query } = req.params; // Game+of+Thrones
-        const { season } = req.params; // 1
-        const { episode } = req.params; // 1
-
-        finalSearchUrl = omdbApiUrl + '?t=' + query + '&season=' + season + '&episode=' + episode + omdbApiKey;
-        console.log(finalSearchUrl);
-
-        request.get(finalSearchUrl, (error, resp, body) => {
-            if (error) console.log(error);
-            else {
-                console.log(resp);
-
-                // response.body is a JSON object
-                const fetchResponse = JSON.parse(resp.body);
-                const response = respondShowByEpisode(fetchResponse);
-
-                if (response.Message == 'True') res.status(200);
-                else res.status(404);
-                res.send(response);
-            }
-        });
-    }
 }
 
 const callbackController = new CallbackController();
