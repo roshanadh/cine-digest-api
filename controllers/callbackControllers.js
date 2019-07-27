@@ -307,7 +307,7 @@ class CallbackController {
                 const responseBody = response.data;
 
                 if (responseStatus === 200) {
-                    let {
+                    const {
                         backdrop_path,
                         created_by,
                         episode_run_time,
@@ -326,7 +326,7 @@ class CallbackController {
                         seasons,
                         status,
                         vote_average,
-                        vote_count
+                        vote_count,
                     } = responseBody;
 
                     // Set length = 0 if returned null by TMDB API
@@ -380,27 +380,56 @@ class CallbackController {
             });
     }
 
-    getShowBySeason(req, res) {
-        const { query } = req.params; // Game+of+Thrones
-        const { season } = req.params; // 1
+    getSeason(req, res) {
+        const PATH = `/tv/${req.params.id}/season/${req.params.seasonNo}`;
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
 
-        finalSearchUrl = omdbApiUrl + '?t=' + query + '&season=' + season + omdbApiKey;
-        console.log(finalSearchUrl);
+                if (responseStatus === 200) {
+                    const {
+                        air_date,
+                        episodes,
+                        poster_path,
+                        season_number,
+                    } = responseBody;
 
-        request.get(finalSearchUrl, (error, resp, _body) => {
-            if (error) console.log(error);
-            else {
-                console.log(resp);
+                    // Set length = 0 if returned null by TMDB API
+                    const episodesLength = episodes.length > 0 ? episodes.length : 0;
 
-                // response.body is a JSON object
-                const fetchResponse = JSON.parse(resp.body);
-                const response = respondShowBySeason(fetchResponse);
+                    for (let i = 0; i < episodesLength; i++) {
+                        const {
+                            air_date,
+                            episode_number,
+                            name,
+                            overview,
+                            vote_average,
+                            vote_count,
+                        } = episodes[i];
 
-                if (response.Message == 'True') res.status(200);
-                else res.status(404);
-                res.send(response);
-            }
-        });
+                        episodes[i] = {
+                            air_date,
+                            episode_number,
+                            name,
+                            overview,
+                            vote_average,
+                            vote_count,
+                        };
+                    }
+                    return res.status(200).json({
+                        air_date,
+                        episodes,
+                        poster_path,
+                        season_number,
+                    });
+                }
+                return res.sendStatus(404);
+            })
+            .catch((error) => {
+                res.sendStatus(error.response.status);
+            });
     }
 
     getShowBySeasonAndEpisode(req, res) {
