@@ -1,24 +1,17 @@
 /* eslint-disable no-shadow */
-const request = require('request');
+
+// TODO
+// Convert snake_case to camelCase in every response
 const path = require('path');
 const axios = require('axios');
-const respondMovie = require('../controllers/movieControllers.js');
-const { respondShowBySeason, respondShowByEpisode } = require('../controllers/showControllers.js');
+
 const {
-    OMDB_KEY,
     TMDB_KEY,
     BASE_URL,
     API_KEY_STRING,
     QUERY_STRING,
     PRIMARY_RELEASE_YEAR_STRING,
 } = require('../utility.js');
-
-// Request URLs
-const omdbApiUrl = 'http://www.omdbapi.com/';
-const omdbApiKey = `&apikey=${OMDB_KEY}`;
-
-// Final search URL
-let finalSearchUrl;
 
 class CallbackController {
     getLanding(req, res) {
@@ -229,51 +222,201 @@ class CallbackController {
             });
     }
 
-    getShowBySeason(req, res) {
-        const { query } = req.params; // Game+of+Thrones
-        const { season } = req.params; // 1
+    searchShowsByTitle(req, res) {
+        const PATH = '/search/tv';
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY
+            + QUERY_STRING + req.params.title;
 
-        finalSearchUrl = omdbApiUrl + '?t=' + query + '&season=' + season + omdbApiKey;
-        console.log(finalSearchUrl);
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
 
-        request.get(finalSearchUrl, (error, resp, _body) => {
-            if (error) console.log(error);
-            else {
-                console.log(resp);
+                // Separating concerns
+                const parsedTotalResults = parseInt(responseBody.total_results, 10);
 
-                // response.body is a JSON object
-                const fetchResponse = JSON.parse(resp.body);
-                const response = respondShowBySeason(fetchResponse);
+                /*
+                    *   There are at most 20 results per page.
+                    *   Cine Digest API is to return information on the
+                        first 20 (if there are) titles.
+                */
 
-                if (response.Message == 'True') res.status(200);
-                else res.status(404);
-                res.send(response);
-            }
-        });
+                const totalResults = parsedTotalResults <= 20 ? parsedTotalResults : 20;
+                const resultsArray = responseBody.results;
+                const voteCounts = [];
+                const titleIds = [];
+                const voteAverages = [];
+                const titles = [];
+                const posterPaths = [];
+                const languages = [];
+                const overviews = [];
+                const firstAirDates = [];
+
+                if (responseStatus === 200 && totalResults > 0) {
+                    const message = true;
+                    for (let i = 0; i < totalResults; i++) {
+                        voteCounts[i] = resultsArray[i].vote_count;
+                        titleIds[i] = resultsArray[i].id;
+                        voteAverages[i] = resultsArray[i].vote_average;
+                        titles[i] = resultsArray[i].name;
+                        posterPaths[i] = resultsArray[i].poster_path;
+                        languages[i] = resultsArray[i].original_language;
+                        overviews[i] = resultsArray[i].overview;
+                        firstAirDates[i] = resultsArray[i].first_air_date;
+                    }
+                    return res.status(200).json({
+                        responseStatus,
+                        message,
+                        totalResults,
+                        voteCounts,
+                        titleIds,
+                        voteAverages,
+                        titles,
+                        posterPaths,
+                        languages,
+                        overviews,
+                        firstAirDates,
+                    });
+                }
+                return res.sendStatus(404);
+            })
+            .catch((error) => {
+                res.sendStatus(error.response.status);
+            });
     }
 
-    getShowBySeasonAndEpisode(req, res) {
-        const { query } = req.params; // Game+of+Thrones
-        const { season } = req.params; // 1
-        const { episode } = req.params; // 1
+    getShowById(req, res) {
+        const PATH = `/tv/${req.params.id}`;
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
 
-        finalSearchUrl = omdbApiUrl + '?t=' + query + '&season=' + season + '&episode=' + episode + omdbApiKey;
-        console.log(finalSearchUrl);
+                if (responseStatus === 200) {
+                    const {
+                        backdrop_path,
+                        created_by,
+                        episode_run_time,
+                        first_air_date,
+                        genres,
+                        homepage,
+                        id,
+                        last_air_date,
+                        name,
+                        next_episode_to_air,
+                        networks,
+                        number_of_episodes,
+                        number_of_seasons,
+                        overview,
+                        poster_path,
+                        seasons,
+                        status,
+                        vote_average,
+                        vote_count,
+                    } = responseBody;
 
-        request.get(finalSearchUrl, (error, resp, body) => {
-            if (error) console.log(error);
-            else {
-                console.log(resp);
+                    // Set length = 0 if returned null by TMDB API
+                    const createdByLength = created_by.length > 0 ? created_by.length : 0;
+                    const episodeRunTimeLength = episode_run_time.length > 0 ? episode_run_time.length : 0;
+                    const networksLength = networks.length > 0 ? networks.length : 0;
+                    const seasonsLength = seasons.length > 0 ? seasons.length : 0;
 
-                // response.body is a JSON object
-                const fetchResponse = JSON.parse(resp.body);
-                const response = respondShowByEpisode(fetchResponse);
+                    const createdBy = [];
+                    const episodeRunTime = [];
 
-                if (response.Message == 'True') res.status(200);
-                else res.status(404);
-                res.send(response);
-            }
-        });
+                    for (let i = 0; i < createdByLength; i++)
+                        createdBy[i] = created_by[i].name;
+
+                    for (let i = 0; i < episodeRunTimeLength; i++)
+                        episodeRunTime[i] = episode_run_time[i];
+
+                    for (let i = 0; i < networksLength; i++)
+                        networks[i] = networks[i].name;
+
+                    for (let i = 0; i < seasonsLength; i++)
+                        seasons[i] = seasons[i].name;
+
+                    return res.status(200).json({
+                        responseStatus,
+                        name,
+                        id,
+                        backdrop_path,
+                        createdBy,
+                        poster_path,
+                        seasons,
+                        status,
+                        vote_average,
+                        vote_count,
+                        episodeRunTime,
+                        first_air_date,
+                        last_air_date,
+                        genres,
+                        homepage,
+                        next_episode_to_air,
+                        networks,
+                        number_of_episodes,
+                        number_of_seasons,
+                        overview,
+                    });
+                }
+                return res.sendStatus(404);
+            })
+            .catch((error) => {
+                res.sendStatus(error.response.status);
+            });
+    }
+
+    getSeason(req, res) {
+        const PATH = `/tv/${req.params.id}/season/${req.params.seasonNo}`;
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
+
+                if (responseStatus === 200) {
+                    const {
+                        air_date,
+                        episodes,
+                        poster_path,
+                        season_number,
+                    } = responseBody;
+
+                    // Set length = 0 if returned null by TMDB API
+                    const episodesLength = episodes.length > 0 ? episodes.length : 0;
+
+                    for (let i = 0; i < episodesLength; i++) {
+                        const {
+                            air_date,
+                            episode_number,
+                            name,
+                            overview,
+                            vote_average,
+                            vote_count,
+                        } = episodes[i];
+
+                        episodes[i] = {
+                            air_date,
+                            episode_number,
+                            name,
+                            overview,
+                            vote_average,
+                            vote_count,
+                        };
+                    }
+                    return res.status(200).json({
+                        poster_path,
+                        season_number,
+                        air_date,
+                        episodes,
+                    });
+                }
+                return res.sendStatus(404);
+            })
+            .catch((error) => {
+                res.sendStatus(error.response.status);
+            });
     }
 }
 
