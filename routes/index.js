@@ -27,9 +27,9 @@ router.get('/api/v1/searchs/:title', CallbackController.searchShowsByTitle);
 // https://api.themoviedb.org/3/tv/{tv-show-id}?api_key={}
 router.get('/api/v1/gets/:id', CallbackController.getShowById);
 
-// Search TV shows by seasons (without episodes); lists all episodes
-// http://www.omdbapi.com/?t=Game+of+Thrones&Season=1
-router.get('/api/v1/searchs/:query/:season', CallbackController.getShowBySeason);
+// Get TV show season
+// https://api.themoviedb.org/3/tv/{tv-show-id}/season/{season-number}?api_key={}
+router.get('/api/v1/gets/:id/:seasonNo', CallbackController.getSeason);
 
 // Search TV show by seasons (with episodes)
 // http://www.omdbapi.com/?t=Game+of+Thrones&season=1&episode=1
