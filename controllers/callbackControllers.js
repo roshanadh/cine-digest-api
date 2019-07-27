@@ -406,10 +406,10 @@ class CallbackController {
                         };
                     }
                     return res.status(200).json({
-                        air_date,
-                        episodes,
                         poster_path,
                         season_number,
+                        air_date,
+                        episodes,
                     });
                 }
                 return res.sendStatus(404);
