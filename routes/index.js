@@ -35,6 +35,10 @@ router.get('/api/v1/gets/:id/:seasonNo', CallbackController.getSeason);
 // https://api.themoviedb.org/3/movie/{movie-id}/recommendations?api_key={}
 router.get('/api/v1/getmr/:id/', CallbackController.getMovieR);
 
+// Get TV show recommendations
+// https://api.themoviedb.org/3/tv/{tv-show-id}/recommendations?api_key={}
+router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
+
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
