@@ -418,6 +418,71 @@ class CallbackController {
                 res.sendStatus(error.response.status);
             });
     }
+
+    getMovieR(req, res) {
+        const PATH = `/movie/${req.params.id}/recommendations`;
+        const requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
+
+        axios.get(requestURL)
+            .then((response) => {
+                const responseStatus = parseInt(response.status, 10);
+                const responseBody = response.data;
+
+                // Separating concerns
+                const parsedTotalResults = parseInt(responseBody.total_results, 10);
+
+                /*
+                    *   There are at most 20 results per page.
+                    *   Cine Digest API is to return information on the
+                        first 20 (if there are) titles.
+                */
+
+                const totalResults = parsedTotalResults <= 20 ? parsedTotalResults : 20;
+                const resultsArray = responseBody.results;
+                const voteCounts = [];
+                const titleIds = [];
+                const voteAverages = [];
+                const titles = [];
+                const posterPaths = [];
+                const languages = [];
+                const overviews = [];
+                const releaseDates = [];
+
+                if (responseStatus === 200 && totalResults > 0) {
+                    const message = true;
+                    for (let i = 0; i < totalResults; i++) {
+                        // Only return titles with non-adult category
+                        if (resultsArray[i].adult === false) {
+                            voteCounts[i] = resultsArray[i].vote_count;
+                            titleIds[i] = resultsArray[i].id;
+                            voteAverages[i] = resultsArray[i].vote_average;
+                            titles[i] = resultsArray[i].title;
+                            posterPaths[i] = resultsArray[i].poster_path;
+                            languages[i] = resultsArray[i].original_language;
+                            overviews[i] = resultsArray[i].overview;
+                            releaseDates[i] = resultsArray[i].release_date;
+                        }
+                    }
+                    return res.status(200).json({
+                        responseStatus,
+                        message,
+                        totalResults,
+                        voteCounts,
+                        titleIds,
+                        voteAverages,
+                        titles,
+                        posterPaths,
+                        languages,
+                        overviews,
+                        releaseDates,
+                    });
+                }
+                return res.sendStatus(404);
+            })
+            .catch((error) => {
+                res.sendStatus(error.response.status);
+            });
+    }
 }
 
 const callbackController = new CallbackController();
