@@ -42,6 +42,7 @@ router.get('/api/v1/getmr/:id/', CallbackController.getMovieR);
 router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
 
 // Start MySQL database connection
+router.post('/api/v1/getUser/', usersModel.getUser);
 router.post('/api/v1/register/', usersModel.addUser);
 router.post('/api/v1/verify/', usersModel.verifyUser);
 router.post('/api/v1/changePassword/', usersModel.changePassword);

@@ -3,6 +3,31 @@ const bcrypt = require('bcryptjs');
 const db = require('./index.js');
 
 class UsersModel {
+    getUser(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        }
+        const { username } = req.body;
+
+        db.query('SELECT * FROM users WHERE username=?;', [username], (error, results, fields) => {
+            if (error) {
+                return db.rollback(() => {
+                    throw error;
+                });
+            }
+            if (results.length > 0) {
+                res.status(200).send({
+                    username,
+                    name: results[0].name,
+                });
+            } else {
+                res.status(404).send({ status: 'NOT-FOUND' });
+            }
+        });
+    }
+
     addUser(req, res) {
         if (!req.body.username) {
             res.status(400).send({
