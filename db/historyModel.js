@@ -512,7 +512,6 @@ class HistoryModel {
             titleType,
         } = req.body;
 
-        // Check to see if it is in watchingList (then remove it)
         db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleType=?;', [username, listType, titleType], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
@@ -524,6 +523,67 @@ class HistoryModel {
                 for (let i = 0; i < results.length; i++)
                     rows.push(results[i]);
                 res.status(200).send(rows);
+            } else {
+                res.status(404).send({
+                    status: 'NOT-FOUND',
+                });
+            }
+        });
+    }
+
+    getStats(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        }
+
+        const { username } = req.body;
+
+        db.query('SELECT * FROM history WHERE username=?;', [username], (error, results, fields) => {
+            if (error) {
+                return db.rollback(() => {
+                    throw error;
+                });
+            }
+            if (results.length > 0) {
+                let listedMovies = 0;
+                let listedShows = 0;
+                let listedInWishMovies = 0;
+                let listedInWishShows = 0;
+                let listedInWatchedMovies = 0;
+                let listedInWatchedShows = 0;
+                let listedInWatchingShows = 0;
+
+                for (let i = 0; i < results.length; i++) {
+                    const row = results[i];
+                    if (row.titleType === 'movie') {
+                        listedMovies++;
+                        if (row.listType === 'wishList') {
+                            listedInWishMovies++;
+                        } else if (row.listType === 'watchedList') {
+                            listedInWatchedMovies++;
+                        }
+                    } else if (row.titleType === 'show') {
+                        listedShows++;
+                        if (row.listType === 'wishList') {
+                            listedInWishShows++;
+                        } else if (row.listType === 'watchedList') {
+                            listedInWatchedShows++;
+                        } else if (row.listType === 'watchingList') {
+                            listedInWatchingShows++;
+                        }
+                    }
+                }
+                res.status(200).send({
+                    listedMovies,
+                    listedShows,
+                    listedInWishMovies,
+                    listedInWishShows,
+                    listedInWatchedMovies,
+                    listedInWatchedShows,
+                    listedInWatchingShows,
+                });
             } else {
                 res.status(404).send({
                     status: 'NOT-FOUND',
