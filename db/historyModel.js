@@ -448,6 +448,48 @@ class HistoryModel {
                 });
             });
     }
+
+    removeFromList(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        } else if (!req.body.listType) {
+            res.status(400).send({
+                status: 'NO-LIST-TYPE',
+            });
+        } else if (!req.body.titleType) {
+            res.status(400).send({
+                status: 'NO-TITLE-TYPE',
+            });
+        } else if (!req.body.titleId) {
+            res.status(400).send({
+                status: 'NO-TITLE-ID',
+            });
+        }
+
+        const {
+            listType,
+            titleId,
+            username,
+            titleType,
+        } = req.body;
+
+        db.query('DELETE FROM history WHERE listType=? AND titleId=? AND username=? AND titleType=?;',
+            [listType, titleId, username, titleType],
+            (error, results, fields) => {
+                if (error) {
+                    res.status(404).send({
+                        status: error.code,
+                    });
+                    throw error;
+                }
+                // Removed from the list
+                res.status(200).send({
+                    status: 'success',
+                });
+            });
+    }
 }
 
 const historyModel = new HistoryModel();
