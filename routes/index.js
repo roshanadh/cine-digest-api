@@ -41,7 +41,7 @@ router.get('/api/v1/getmr/:id/', CallbackController.getMovieR);
 router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
 
 // Start MySQL database connection
-router.get('/api/v1/initdb/', db.getConnection);
+router.post('/api/v1/register/', db.addUser);
 
 // Error handling
 // Redirect to the landing route
