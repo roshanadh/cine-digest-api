@@ -46,6 +46,7 @@ router.post('/api/v1/getUser/', usersModel.getUser);
 router.post('/api/v1/register/', usersModel.addUser);
 router.post('/api/v1/verify/', usersModel.verifyUser);
 router.post('/api/v1/changePassword/', usersModel.changePassword);
+router.post('/api/v1/updateProfile/', usersModel.updateProfile);
 
 // History model
 router.post('/api/v1/addMovieToWishList/', historyModel.addMovieToWishList);

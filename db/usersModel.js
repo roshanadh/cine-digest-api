@@ -10,7 +10,6 @@ class UsersModel {
             });
         }
         const { username } = req.body;
-
         db.query('SELECT * FROM users WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
@@ -170,6 +169,151 @@ class UsersModel {
                 });
             });
         });
+    }
+
+    updateProfile(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        }
+
+        if (!req.body.newUsername && req.body.newName) {
+            const {
+                username,
+                newName,
+            } = req.body;
+            console.warn('Name not null, username  null!');
+
+            db.query('UPDATE users SET name=? WHERE username=?;', [newName, username], (error, results, fields) => {
+                if (error) {
+                    return db.rollback(() => {
+                        res.send({
+                            status: error.code,
+                        });
+                        throw error;
+                    });
+                }
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.send({
+                                status: err.code,
+                            });
+                            throw err;
+                        });
+                    }
+                    console.log = 'User ' + username + '\'s password updated.';
+                    res.status(200).send({
+                        status: 'success',
+                    });
+                });
+            });
+        } else if (req.body.newUsername && req.body.newName) {
+            const {
+                username,
+                newName,
+                newUsername,
+            } = req.body;
+            console.warn('Name not null, username not null!');
+
+            db.query('UPDATE users SET name=?, username=? WHERE username=?;', [newName, newUsername, username], (error, results, fields) => {
+                if (error) {
+                    return db.rollback(() => {
+                        res.send({
+                            status: error.code,
+                        });
+                        throw error;
+                    });
+                }
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.send({
+                                status: err.code,
+                            });
+                            throw err;
+                        });
+                    }
+                });
+            });
+            // Since username is also used in ...
+            // history table, update history table as well
+            db.query('UPDATE history SET username=? WHERE username=?;', [newUsername, username], (error, results, fields) => {
+                if (error) {
+                    return db.rollback(() => {
+                        res.send({
+                            status: error.code,
+                        });
+                        throw error;
+                    });
+                }
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.send({
+                                status: err.code,
+                            });
+                            throw err;
+                        });
+                    }
+                    res.status(200).send({ status: 'success' });
+                });
+            });
+        } else if (req.body.newUsername && !req.body.newName) {
+            const {
+                username,
+                newUsername,
+            } = req.body;
+            console.warn('Name null, username not null!');
+
+            db.query('UPDATE users SET username=? WHERE username=?;', [newUsername, username], (error, results, fields) => {
+                if (error) {
+                    return db.rollback(() => {
+                        res.send({
+                            status: error.code,
+                        });
+                        throw error;
+                    });
+                }
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.send({
+                                status: err.code,
+                            });
+                            throw err;
+                        });
+                    }
+                });
+            });
+            // Since username is also used in ...
+            // history table, update history table as well
+            db.query('UPDATE history SET username=? WHERE username=?;', [newUsername, username], (error, results, fields) => {
+                if (error) {
+                    return db.rollback(() => {
+                        res.send({
+                            status: error.code,
+                        });
+                        throw error;
+                    });
+                }
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.send({
+                                status: err.code,
+                            });
+                            throw err;
+                        });
+                    }
+                    res.status(200).send({ status: 'success' });
+                });
+            });
+        } else {
+            console.warn('Username and Name both null!');
+            res.status(404).send({ status: 'NO-FIELD-TO-CHANGE' });
+        }
     }
 }
 
