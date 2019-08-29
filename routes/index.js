@@ -55,6 +55,8 @@ router.post('/api/v1/addShowToWatchingList/', historyModel.addShowToWatchingList
 router.post('/api/v1/addShowToWatchedList/', historyModel.addShowToWatchedList);
 
 router.post('/api/v1/removeFromList/', historyModel.removeFromList);
+
+router.post('/api/v1/getHistory/', historyModel.getHistory);
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
