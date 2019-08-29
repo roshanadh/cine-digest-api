@@ -10,6 +10,7 @@ const {
     QUERY_STRING,
     PRIMARY_RELEASE_YEAR_STRING,
     DBHOST,
+    DBNAME,
     DBUSERNAME,
     DBPASSWORD,
 } = process.env;
@@ -23,6 +24,7 @@ module.exports = {
     QUERY_STRING,
     PRIMARY_RELEASE_YEAR_STRING,
     DBHOST,
+    DBNAME,
     DBUSERNAME,
     DBPASSWORD,
 };
