@@ -1,4 +1,7 @@
+/* eslint-disable no-loop-func */
+/* eslint-disable no-shadow */
 /* eslint-disable consistent-return */
+const axios = require('axios');
 const db = require('./index.js');
 
 class HistoryModel {
@@ -634,6 +637,106 @@ class HistoryModel {
                     });
                 }
                 res.status(200).send(recentTitles);
+            } else {
+                res.status(404).send({
+                    status: 'NOT-FOUND',
+                });
+            }
+        });
+    }
+
+    getTitleRecommendations(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        } else if (!req.body.titleType) {
+            res.status(400).send({
+                status: 'NO-TITLE-TYPE',
+            });
+        }
+
+        const { username, titleType } = req.body;
+        // Get recent titles
+        db.query('SELECT * FROM history WHERE titleType=? AND username=?;', [titleType, username], (error, results, fields) => {
+            if (error) {
+                return db.rollback(() => {
+                    throw error;
+                });
+            }
+            if (results.length > 0) {
+                const len = results.length;
+                const recentTitles = [];
+                let lowerLimit = 0;
+                switch (len) {
+                case len <= 5:
+                    lowerLimit = 0;
+                    break;
+                case len > 6:
+                    lowerLimit = len - 6;
+                    break;
+                default:
+                    break;
+                }
+
+                for (let i = len - 1; i >= lowerLimit; i--) {
+                    const row = results[i];
+                    recentTitles.push({
+                        title: row.titleName,
+                        titleId: row.titleId,
+                        posterPath: row.titlePosterPath,
+                    });
+                }
+
+                if (recentTitles.length > 2) {
+                    // Proceed only if atleast 3 titles have been added to lists
+                    const recoms = [];
+                    const titleIds = [];
+                    const getRecomPath = titleType === 'movie' ? 'getmr' : 'getsr';
+
+                    // Iterate through recommendations for the 3 recently listed titles
+                    for (let i = 0; i < 3; i++) {
+                        titleIds.push(recentTitles[i].titleId);
+                        axios.get(`https://api-cine-digest.herokuapp.com/api/v1/${getRecomPath}/${titleIds[i]};`)
+                            .then((response) => {
+                                // console.warn(response);
+                                let index = 0;
+                                const upperLimit = response.titleIds.length < 3
+                                    ? response.titleIds.length : 3;
+
+                                // Check if movie is already in a list, if so then don't recommend it
+                                let currentTitleId = response.titleIds[index];
+                                db.query('SELECT * FROM history WHERE username=? AND titleId=? AND titleType=?;', [username, currentTitleId, titleType], (error, results, fields) => {
+                                    if (error) {
+                                        return db.rollback(() => {
+                                            throw error;
+                                        });
+                                    }
+                                    const len = results.length;
+                                    while (true) {
+                                        if (len === 0) {
+                                            // Movie is not in a list, can be recommended
+                                            recoms.push({
+                                                title: response.titles[index],
+                                                titleId: response.titleIds[index],
+                                                posterPath: `https://image.tmdb.org/t/p/original/${response.posterPaths[index]}`,
+                                            });
+                                        }
+
+                                        if (index >= upperLimit) {
+                                            // Break if index crosses the upper limit
+                                            break;
+                                        }
+                                        ++index;
+                                    }
+                                });
+                            })
+                            .catch((error) => {
+                                console.warn(error.message);
+                            });
+                    }
+                    res.status(200).send(recoms);
+                }
             } else {
                 res.status(404).send({
                     status: 'NOT-FOUND',
