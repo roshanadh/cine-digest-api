@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const db = require('./index.js');
 
 class UsersModel {
