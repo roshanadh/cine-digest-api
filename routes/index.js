@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const CallbackController = require('../controllers/callbackControllers.js');
+const db = require('../db/index.js');
 
 // GET method routes
 // Landing route
@@ -38,6 +39,9 @@ router.get('/api/v1/getmr/:id/', CallbackController.getMovieR);
 // Get TV show recommendations
 // https://api.themoviedb.org/3/tv/{tv-show-id}/recommendations?api_key={}
 router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
+
+// Start MySQL database connection
+router.get('/api/v1/initdb/', db.getConnection);
 
 // Error handling
 // Redirect to the landing route
