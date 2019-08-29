@@ -21,14 +21,7 @@ class UserModel {
             name,
             password,
         } = req.body;
-
-        // connection.beginTransaction((err) => {
-        //     if (err) {
-        //         res.send({
-        //             status: err.code,
-        //         });
-        //         throw err;
-        //     }
+        
         db.query('INSERT INTO users(username, name, password) VALUES(?,?,?);', [username, name, password], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
