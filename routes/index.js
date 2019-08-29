@@ -49,6 +49,7 @@ router.post('/api/v1/changePassword/', usersModel.changePassword);
 // History model
 router.post('/api/v1/addMovieToWishList/', historyModel.addMovieToWishList);
 router.post('/api/v1/addMovieToWatchedList/', historyModel.addMovieToWatchedList);
+router.post('/api/v1/addShowToWishList/', historyModel.addShowToWishList);
 
 // Error handling
 // Redirect to the landing route
