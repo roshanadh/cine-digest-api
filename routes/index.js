@@ -60,6 +60,7 @@ router.post('/api/v1/getHistory/', historyModel.getHistory);
 router.post('/api/v1/getStats/', historyModel.getStats);
 
 router.post('/api/v1/getRecentTitles/', historyModel.getRecentTitles);
+router.post('/api/v1/getTitleR/', historyModel.getTitleRecommendations);
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
