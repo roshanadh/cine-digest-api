@@ -591,6 +591,56 @@ class HistoryModel {
             }
         });
     }
+
+    getRecentTitles(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        } else if (!req.body.titleType) {
+            res.status(400).send({
+                status: 'NO-TITLE-TYPE',
+            });
+        }
+
+        const { username, titleType } = req.body;
+        db.query('SELECT * FROM history WHERE titleType=? AND username=?;', [titleType, username], (error, results, fields) => {
+            if (error) {
+                return db.rollback(() => {
+                    throw error;
+                });
+            }
+            if (results.length > 0) {
+                const len = results.length;
+                const recentTitles = [];
+                let lowerLimit = 0;
+                switch (len) {
+                case len <= 5:
+                    lowerLimit = 0;
+                    break;
+                case len > 6:
+                    lowerLimit = len - 6;
+                    break;
+                default:
+                    break;
+                }
+
+                for (let i = len - 1; i >= lowerLimit; i--) {
+                    const row = results[i];
+                    recentTitles.push({
+                        title: row.titleName,
+                        titleId: row.titleId,
+                        posterPath: row.titlePosterPath,
+                    });
+                }
+                res.status(200).send(recentTitles);
+            } else {
+                res.status(404).send({
+                    status: 'NOT-FOUND',
+                });
+            }
+        });
+    }
 }
 
 const historyModel = new HistoryModel();
