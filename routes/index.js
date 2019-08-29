@@ -42,6 +42,7 @@ router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
 
 // Start MySQL database connection
 router.post('/api/v1/register/', userModel.addUser);
+router.post('/api/v1/verify/', userModel.verifyUser);
 
 // Error handling
 // Redirect to the landing route
