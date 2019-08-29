@@ -2,7 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 const CallbackController = require('../controllers/callbackControllers.js');
-const userModel = require('../db/userModel.js');
+const usersModel = require('../db/usersModel.js');
+const historyModel = require('../db/historyModel.js');
 
 // GET method routes
 // Landing route
@@ -41,8 +42,12 @@ router.get('/api/v1/getmr/:id/', CallbackController.getMovieR);
 router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
 
 // Start MySQL database connection
-router.post('/api/v1/register/', userModel.addUser);
-router.post('/api/v1/verify/', userModel.verifyUser);
+router.post('/api/v1/register/', usersModel.addUser);
+router.post('/api/v1/verify/', usersModel.verifyUser);
+router.post('/api/v1/changePassword/', usersModel.changePassword);
+
+// History model
+router.post('/api/v1/addMovieToWishList/', historyModel.addMovieToWishList);
 
 // Error handling
 // Redirect to the landing route
