@@ -50,6 +50,7 @@ router.post('/api/v1/changePassword/', usersModel.changePassword);
 router.post('/api/v1/addMovieToWishList/', historyModel.addMovieToWishList);
 router.post('/api/v1/addMovieToWatchedList/', historyModel.addMovieToWatchedList);
 router.post('/api/v1/addShowToWishList/', historyModel.addShowToWishList);
+router.post('/api/v1/addShowToWatchingList/', historyModel.addShowToWatchingList);
 
 // Error handling
 // Redirect to the landing route
