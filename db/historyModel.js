@@ -20,21 +20,13 @@ class HistoryModel {
                 status: 'NO-TITLE-NAME',
             });
         } else if (!req.body.titleOverview) {
-            res.status(400).send({
-                status: 'NO-TITLE-OVERVIEW',
-            });
+            console.warn('NO titleOverview');
         } else if (!req.body.titleVoteCount) {
-            res.status(400).send({
-                status: 'NO-TITLE-VOTE-COUNT',
-            });
+            console.warn('NO titleVoteCount');
         } else if (!req.body.titleVoteAverage) {
-            res.status(400).send({
-                status: 'NO-TITLE-VOTE-AVERAGE',
-            });
+            console.warn('NO titleVoteAverage');
         } else if (!req.body.titlePosterPath) {
-            res.status(400).send({
-                status: 'NO-TITLE-POSTER-PATH',
-            });
+            console.warn('NO titlePosterPath');
         } else if (!req.body.titleType) {
             res.status(400).send({
                 status: 'NO-TITLE-TYPE',
@@ -98,21 +90,13 @@ class HistoryModel {
                 status: 'NO-TITLE-NAME',
             });
         } else if (!req.body.titleOverview) {
-            res.status(400).send({
-                status: 'NO-TITLE-OVERVIEW',
-            });
+            console.warn('NO titleOverview');
         } else if (!req.body.titleVoteCount) {
-            res.status(400).send({
-                status: 'NO-TITLE-VOTE-COUNT',
-            });
+            console.warn('NO titleVoteCount');
         } else if (!req.body.titleVoteAverage) {
-            res.status(400).send({
-                status: 'NO-TITLE-VOTE-AVERAGE',
-            });
+            console.warn('NO titleVoteAverage');
         } else if (!req.body.titlePosterPath) {
-            res.status(400).send({
-                status: 'NO-TITLE-POSTER-PATH',
-            });
+            console.warn('NO titlePosterPath');
         } else if (!req.body.titleType) {
             res.status(400).send({
                 status: 'NO-TITLE-TYPE',
@@ -178,6 +162,76 @@ class HistoryModel {
                         res.status(200).send({
                             status: 'success',
                         });
+                    });
+                });
+            });
+    }
+
+    addShowToWishList(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        } else if (!req.body.listType) {
+            res.status(400).send({
+                status: 'NO-LIST-TYPE',
+            });
+        } else if (!req.body.titleId) {
+            res.status(400).send({
+                status: 'NO-TITLE-ID',
+            });
+        } else if (!req.body.titleName) {
+            res.status(400).send({
+                status: 'NO-TITLE-NAME',
+            });
+        } else if (!req.body.titleOverview) {
+            console.warn('NO titleOverview');
+        } else if (!req.body.titleVoteCount) {
+            console.warn('NO titleVoteCount');
+        } else if (!req.body.titleVoteAverage) {
+            console.warn('NO titleVoteAverage');
+        } else if (!req.body.titlePosterPath) {
+            console.warn('NO titlePosterPath');
+        } else if (!req.body.titleType) {
+            res.status(400).send({
+                status: 'NO-TITLE-TYPE',
+            });
+        }
+
+        const {
+            listType,
+            titleId,
+            titleName,
+            titleOverview,
+            titleVoteCount,
+            titleVoteAverage,
+            titlePosterPath,
+            titleType,
+            username,
+        } = req.body;
+
+        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, username) VALUES (?,?,?,?,?,?,?,?,?);',
+            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
+                if (error) {
+                    return db.rollback(() => {
+                        res.status(404).send({
+                            status: error.code,
+                        });
+                        throw error;
+                    });
+                }
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.send({
+                                status: err.code,
+                            });
+                            throw err;
+                        });
+                    }
+                    console.log = 'Movie ' + titleId + ' added to ' + username + '\'s ' + listType;
+                    res.status(200).send({
+                        status: 'success',
                     });
                 });
             });
