@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const CallbackController = require('../controllers/callbackControllers.js');
-const db = require('../db/index.js');
+const userModel = require('../db/userModel.js');
 
 // GET method routes
 // Landing route
@@ -41,7 +41,7 @@ router.get('/api/v1/getmr/:id/', CallbackController.getMovieR);
 router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
 
 // Start MySQL database connection
-router.post('/api/v1/register/', db.addUser);
+router.post('/api/v1/register/', userModel.addUser);
 
 // Error handling
 // Redirect to the landing route
