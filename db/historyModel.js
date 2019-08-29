@@ -490,6 +490,47 @@ class HistoryModel {
                 });
             });
     }
+
+    getHistory(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        } else if (!req.body.listType) {
+            res.status(400).send({
+                status: 'NO-LIST-TYPE',
+            });
+        } else if (!req.body.titleType) {
+            res.status(400).send({
+                status: 'NO-TITLE-TYPE',
+            });
+        }
+
+        const {
+            listType,
+            username,
+            titleType,
+        } = req.body;
+
+        // Check to see if it is in watchingList (then remove it)
+        db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleType=?;', [username, listType, titleType], (error, results, fields) => {
+            if (error) {
+                return db.rollback(() => {
+                    throw error;
+                });
+            }
+            if (results.length > 0) {
+                const rows = [];
+                for (let i = 0; i < results.length; i++)
+                    rows.push(results[i]);
+                res.status(200).send(rows);
+            } else {
+                res.status(404).send({
+                    status: 'NOT-FOUND',
+                });
+            }
+        });
+    }
 }
 
 const historyModel = new HistoryModel();
