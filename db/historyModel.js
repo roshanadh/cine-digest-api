@@ -1,7 +1,9 @@
+/* eslint-disable no-extra-boolean-cast */
 /* eslint-disable no-loop-func */
 /* eslint-disable no-shadow */
 /* eslint-disable consistent-return */
 const axios = require('axios');
+const querystring = require('querystring');
 const db = require('./index.js');
 
 class HistoryModel {
@@ -9,11 +11,6 @@ class HistoryModel {
         if (!req.body.username) {
             return res.status(400).send({
                 status: 'NO-USERNAME',
-            });
-        }
-        if (!req.body.listType) {
-            return res.status(400).send({
-                status: 'NO-LIST-TYPE',
             });
         }
         if (!req.body.titleId) {
@@ -27,29 +24,54 @@ class HistoryModel {
             });
         }
 
-        const {
-            listType,
-            titleId,
-            titleType,
-            username,
-        } = req.body;
-
-        db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, listType, titleId, titleType], (error, results, fields) => {
-            if (error) {
-                return db.rollback(() => {
-                    res.send({
-                        status: error.code,
+        if (!!req.body.listType) {
+        // Check if in a particular list
+            const {
+                listType,
+                titleId,
+                titleType,
+                username,
+            } = req.body;
+            db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, listType, titleId, titleType], (error, results, fields) => {
+                if (error) {
+                    return db.rollback(() => {
+                        res.send({
+                            status: error.code,
+                        });
+                        console.warn(error);
                     });
-                    console.warn(error);
-                });
-            }
-            if (results.length > 0) {
-                // Title is in list
-                return res.status(200).send({ status: 'success' });
-            }
-            // Title is not in list
-            return res.status(404).send({ status: 'NOT-FOUND' });
-        });
+                }
+                if (results.length > 0) {
+                    // Title is in list
+                    return res.status(200).send({ status: 'success' });
+                }
+                // Title is not in list
+                return res.status(404).send({ status: 'NOT-FOUND' });
+            });
+        } else {
+        // Check if in any list
+            const {
+                titleId,
+                titleType,
+                username,
+            } = req.body;
+            db.query('SELECT * FROM history WHERE username=? AND titleId=? AND titleType=?;', [username, titleId, titleType], (error, results, fields) => {
+                if (error) {
+                    return db.rollback(() => {
+                        res.send({
+                            status: error.code,
+                        });
+                        console.warn(error);
+                    });
+                }
+                if (results.length > 0) {
+                    // Title is in list
+                    return res.status(200).send({ status: 'success' });
+                }
+                // Title is not in list
+                return res.status(404).send({ status: 'NOT-FOUND' });
+            });
+        }
     }
 
     addMovieToWishList(req, res) {
@@ -765,47 +787,54 @@ class HistoryModel {
                     // Iterate through recommendations for the 3 recently listed titles
                     for (let i = 0; i < 3; i++) {
                         titleIds.push(recentTitles[i].titleId);
-                        axios.get(`https://api-cine-digest.herokuapp.com/api/v1/${getRecomPath}/${titleIds[i]};`)
+                        axios.get(`https://api-cine-digest.herokuapp.com/api/v1/${getRecomPath}/${titleIds[i]}`)
                             .then((result) => {
                                 const response = result.data;
-                                console.warn(response.titleIds.length + 'is the len!');
                                 let index = 0;
                                 const upperLimit = response.titleIds.length < 3
                                     ? response.titleIds.length : 3;
-                                console.warn(response.titleIds[index]);
                                 // Check if movie is already in a list, if so then don't recommend it
-                                db.query('SELECT * FROM history WHERE username=? AND titleId=? AND titleType=?;', [username, response.titleIds[index], titleType], (error, results, fields) => {
-                                    if (error) {
-                                        return db.rollback(() => {
-                                            res.send({
-                                                status: error.code,
-                                            });
-                                            console.warn(error);
-                                        });
-                                    }
-                                    const len = results.length;
-                                    while (true) {
-                                        if (len === 0) {
-                                            // Movie is not in a list, can be recommended
-                                            recoms.push({
-                                                title: response.titles[index],
-                                                titleId: response.titleIds[index],
-                                                posterPath: `https://image.tmdb.org/t/p/original/${response.posterPaths[index]}`,
-                                            });
-                                        }
 
-                                        if (index >= upperLimit) {
-                                            // Break if index crosses the upper limit
-                                            break;
+                                const checkListPayload = {
+                                    username,
+                                    titleId: response.titleIds[index],
+                                    titleType,
+                                };
+                                console.warn(querystring.stringify(checkListPayload));
+                                axios.post('https://api-cine-digest.herokuapp.com/api/v1/isInList', {
+                                    username,
+                                    titleId: response.titleIds[index],
+                                    titleType,
+                                }, {
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                                    },
+                                })
+                                // axios.post('https://api-cine-digest.herokuapp.com/api/v1/isInList', querystring.stringify(checkListPayload))
+                                    .then((response) => {
+                                        while (true) {
+                                            if (response.data.status !== 'success') {
+                                            // Title is not in a list
+                                                recoms.push({
+                                                    title: response.titles[index],
+                                                    titleId: response.titleIds[index],
+                                                    posterPath: `https://image.tmdb.org/t/p/original/${response.posterPaths[index]}`,
+                                                });
+                                            }
+                                            if (index >= upperLimit) {
+                                                // Break if index crosses the upper limit
+                                                break;
+                                            }
+                                            ++index;
                                         }
-                                        ++index;
-                                    }
-                                });
+                                    })
+                                    .catch(error => console.warn(error.message));
                             })
                             .catch((error) => {
                                 console.warn(error.message);
                             });
                     }
+                    // console.warn(recoms[1].title)
                     return res.status(200).send(recoms);
                 }
                 return res.status(404).send({
