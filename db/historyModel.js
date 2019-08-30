@@ -6,49 +6,50 @@ const db = require('./index.js');
 
 class HistoryModel {
     isInList(req, res) {
-        // if (!req.body.username) {
-        //     res.status(400).send({
-        //         status: 'NO-USERNAME',
-        //     });
-        // } else if (!req.body.listType) {
-        //     res.status(400).send({
-        //         status: 'NO-LIST-TYPE',
-        //     });
-        // } else if (!req.body.titleId) {
-        //     res.status(400).send({
-        //         status: 'NO-TITLE-ID',
-        //     });
-        // } else if (!req.body.titleType) {
-        //     res.status(400).send({
-        //         status: 'NO-TITLE-NAME',
-        //     });
-        // }
+        if (!req.body.username) {
+            return res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        }
+        if (!req.body.listType) {
+            return res.status(400).send({
+                status: 'NO-LIST-TYPE',
+            });
+        }
+        if (!req.body.titleId) {
+            return res.status(400).send({
+                status: 'NO-TITLE-ID',
+            });
+        }
+        if (!req.body.titleType) {
+            return res.status(400).send({
+                status: 'NO-TITLE-NAME',
+            });
+        }
 
-        // const {
-        //     listType,
-        //     titleId,
-        //     titleType,
-        //     username,
-        // } = req.body;
+        const {
+            listType,
+            titleId,
+            titleType,
+            username,
+        } = req.body;
 
-        // db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, listType, titleId, titleType], (error, results, fields) => {
-        //     if (error) {
-        //         return db.rollback(() => {
-        //             res.send({
-        //                 status: error.code,
-        //             });
-        //             console.warn(error);
-        //         });
-        //     }
-        //     if (results.length > 0) {
-        //         // Title is in list
-        //         res.status(200).send({ status: 'success' });
-        //     } else {
-        //         // Title is not in list
-        //         res.status(404).send({ status: 'NOT-FOUND' });
-        //     }
-        // });
-        res.send({ status: 'NOT-FOUND' });
+        db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, listType, titleId, titleType], (error, results, fields) => {
+            if (error) {
+                return db.rollback(() => {
+                    res.send({
+                        status: error.code,
+                    });
+                    console.warn(error);
+                });
+            }
+            if (results.length > 0) {
+                // Title is in list
+                return res.status(200).send({ status: 'success' });
+            }
+            // Title is not in list
+            return res.status(404).send({ status: 'NOT-FOUND' });
+        });
     }
 
     addMovieToWishList(req, res) {
@@ -202,10 +203,10 @@ class HistoryModel {
                                 ['wishList', titleId, username, titleType],
                                 (error, results, fields) => {
                                     if (error) {
-                                        res.send({
+                                        console.warn(error);
+                                        return res.send({
                                             status: error.code,
                                         });
-                                        console.warn(error);
                                     }
                                     // Removed from wishList, and has been added to watchedList
                                     // console.log('Deleted ' + results.affectedRows + ' rows from wishList');
@@ -373,10 +374,10 @@ class HistoryModel {
                             ['wishList', titleId, username, titleType],
                             (error, results, fields) => {
                                 if (error) {
-                                    res.send({
+                                    console.warn(error);
+                                    return res.send({
                                         status: error.code,
                                     });
-                                    console.warn(error);
                                 }
                                 // Removed from wishList, and has been added to watchingList
                             });
@@ -469,10 +470,10 @@ class HistoryModel {
                             ['wishList', titleId, username, titleType],
                             (error, results, fields) => {
                                 if (error) {
-                                    res.send({
+                                    console.warn(error);
+                                    return res.send({
                                         status: error.code,
                                     });
-                                    console.warn(error);
                                 }
                                 // Removed from wishList, and has been added to watchedList
                             });
@@ -494,17 +495,17 @@ class HistoryModel {
                                 ['watchingList', titleId, username, titleType],
                                 (error, results, fields) => {
                                     if (error) {
-                                        res.send({
+                                        console.warn(error);
+                                        return res.send({
                                             status: error.code,
                                         });
-                                        console.warn(error);
                                     }
                                     // Removed from watchingList, and has been added to watchedList
                                 });
                         }
                     });
                 });
-                res.status(200).send({
+                return res.status(200).send({
                     status: 'success',
                 });
             });
@@ -540,13 +541,13 @@ class HistoryModel {
             [listType, titleId, username, titleType],
             (error, results, fields) => {
                 if (error) {
-                    res.send({
+                    console.warn(error);
+                    return res.send({
                         status: error.code,
                     });
-                    console.warn(error);
                 }
                 // Removed from the list
-                res.status(200).send({
+                return res.status(200).send({
                     status: 'success',
                 });
             });
