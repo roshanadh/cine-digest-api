@@ -5,6 +5,49 @@ const axios = require('axios');
 const db = require('./index.js');
 
 class HistoryModel {
+    isInList(req, res) {
+        if (!req.body.username) {
+            res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        } else if (!req.body.listType) {
+            res.status(400).send({
+                status: 'NO-LIST-TYPE',
+            });
+        } else if (!req.body.titleId) {
+            res.status(400).send({
+                status: 'NO-TITLE-ID',
+            });
+        } else if (!req.body.titleType) {
+            res.status(400).send({
+                status: 'NO-TITLE-NAME',
+            });
+        }
+
+        const {
+            listType,
+            titleId,
+            titleType,
+            username,
+        } = req.body;
+
+        db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, listType, titleId, titleType], (error, results, fields) => {
+            if (error) {
+                return db.rollback(() => {
+                    res.send({ status: error });
+                    console.warn(error);
+                });
+            }
+            if (results.length > 0) {
+                // Title is in list
+                res.status(200).send({ status: 'success' });
+            } else {
+                // Title is not in list
+                res.status(404).send({ status: 'NOT-FOUND' });
+            }
+        });
+    }
+
     addMovieToWishList(req, res) {
         if (!req.body.username) {
             res.status(400).send({
@@ -518,7 +561,8 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleType=?;', [username, listType, titleType], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    throw error;
+                    res.send({ status: error });
+                    console.warn(error);
                 });
             }
             if (results.length > 0) {

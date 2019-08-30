@@ -49,6 +49,7 @@ router.post('/api/v1/changePassword/', usersModel.changePassword);
 router.post('/api/v1/updateProfile/', usersModel.updateProfile);
 
 // History model
+router.post('/api/v1/isInList/', historyModel.isInList);
 router.post('/api/v1/addMovieToWishList/', historyModel.addMovieToWishList);
 router.post('/api/v1/addMovieToWatchedList/', historyModel.addMovieToWatchedList);
 
