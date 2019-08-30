@@ -518,7 +518,8 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleType=?;', [username, listType, titleType], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    throw error;
+                    res.send({ status: error });
+                    console.warn(error);
                 });
             }
             if (results.length > 0) {
