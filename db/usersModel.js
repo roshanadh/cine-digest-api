@@ -13,7 +13,10 @@ class UsersModel {
         db.query('SELECT * FROM users WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    throw error;
+                    res.status(404).send({
+                        status: error.code,
+                    });
+                    console.warn(error);
                 });
             }
             if (results.length > 0) {
@@ -151,7 +154,7 @@ class UsersModel {
                     res.send({
                         status: error.code,
                     });
-                    throw error;
+                    console.warn(error);
                 });
             }
             db.commit((err) => {
@@ -160,7 +163,7 @@ class UsersModel {
                         res.send({
                             status: err.code,
                         });
-                        throw err;
+                        console.warn(err);
                     });
                 }
                 console.log = 'User ' + username + '\'s password updated.';
@@ -191,7 +194,7 @@ class UsersModel {
                         res.send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -200,7 +203,7 @@ class UsersModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                     console.log = 'User ' + username + '\'s password updated.';
@@ -223,7 +226,7 @@ class UsersModel {
                         res.send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -232,7 +235,7 @@ class UsersModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                 });
@@ -245,7 +248,7 @@ class UsersModel {
                         res.send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -254,7 +257,7 @@ class UsersModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                     res.status(200).send({ status: 'success' });
@@ -273,7 +276,7 @@ class UsersModel {
                         res.send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -282,7 +285,7 @@ class UsersModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                 });
@@ -295,7 +298,7 @@ class UsersModel {
                         res.send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -304,7 +307,7 @@ class UsersModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                     res.status(200).send({ status: 'success' });

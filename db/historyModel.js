@@ -168,7 +168,7 @@ class HistoryModel {
                         res.status(404).send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -177,7 +177,7 @@ class HistoryModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                     console.log = 'Movie ' + titleId + ' added to ' + username + '\'s ' + listType;
@@ -186,7 +186,10 @@ class HistoryModel {
                     db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
                         if (error) {
                             return db.rollback(() => {
-                                throw error;
+                                res.status(404).send({
+                                    status: error.code,
+                                });
+                                console.warn(error);
                             });
                         }
                         if (results.length > 0) {
@@ -199,7 +202,7 @@ class HistoryModel {
                                         res.status(404).send({
                                             status: error.code,
                                         });
-                                        throw error;
+                                        console.warn(error);
                                     }
                                     // Removed from wishList, and has been added to watchedList
                                     // console.log('Deleted ' + results.affectedRows + ' rows from wishList');
@@ -263,7 +266,7 @@ class HistoryModel {
                         res.status(404).send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -272,7 +275,7 @@ class HistoryModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                     console.log = 'Movie ' + titleId + ' added to ' + username + '\'s ' + listType;
@@ -333,7 +336,7 @@ class HistoryModel {
                         res.status(404).send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -342,7 +345,7 @@ class HistoryModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                     console.log = 'Show ' + titleId + ' added to ' + username + '\'s ' + listType;
@@ -354,7 +357,10 @@ class HistoryModel {
                 db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
                         return db.rollback(() => {
-                            throw error;
+                            res.status(404).send({
+                                status: error.code,
+                            });
+                            console.warn(error);
                         });
                     }
                     if (results.length > 0) {
@@ -367,7 +373,7 @@ class HistoryModel {
                                     res.status(404).send({
                                         status: error.code,
                                     });
-                                    throw error;
+                                    console.warn(error);
                                 }
                                 // Removed from wishList, and has been added to watchingList
                             });
@@ -429,7 +435,7 @@ class HistoryModel {
                         res.status(404).send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -438,7 +444,7 @@ class HistoryModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(err);
                         });
                     }
                     console.log = 'Show ' + titleId + ' added to ' + username + '\'s ' + listType;
@@ -447,7 +453,10 @@ class HistoryModel {
                 db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
                         return db.rollback(() => {
-                            throw error;
+                            res.status(404).send({
+                                status: error.code,
+                            });
+                            console.warn(error);
                         });
                     }
                     if (results.length > 0) {
@@ -460,7 +469,7 @@ class HistoryModel {
                                     res.status(404).send({
                                         status: error.code,
                                     });
-                                    throw error;
+                                    console.warn(error);
                                 }
                                 // Removed from wishList, and has been added to watchedList
                             });
@@ -469,7 +478,10 @@ class HistoryModel {
                     db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'watchingList', titleId, titleType], (error, results, fields) => {
                         if (error) {
                             return db.rollback(() => {
-                                throw error;
+                                res.status(404).send({
+                                    status: error.code,
+                                });
+                                console.warn(error);
                             });
                         }
                         if (results.length > 0) {
@@ -482,7 +494,7 @@ class HistoryModel {
                                         res.status(404).send({
                                             status: error.code,
                                         });
-                                        throw error;
+                                        console.warn(error);
                                     }
                                     // Removed from watchingList, and has been added to watchedList
                                 });
@@ -528,7 +540,7 @@ class HistoryModel {
                     res.status(404).send({
                         status: error.code,
                     });
-                    throw error;
+                    console.warn(error);
                 }
                 // Removed from the list
                 res.status(200).send({
@@ -561,7 +573,7 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleType=?;', [username, listType, titleType], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    res.send({ status: error });
+                    res.send({ status: error.code });
                     console.warn(error);
                 });
             }
@@ -590,7 +602,10 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    throw error;
+                    res.status(404).send({
+                        status: error.code,
+                    });
+                    console.warn(error);
                 });
             }
             if (results.length > 0) {
@@ -654,7 +669,10 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE titleType=? AND username=?;', [titleType, username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    throw error;
+                    res.status(404).send({
+                        status: error.code,
+                    });
+                    console.warn(error);
                 });
             }
             if (results.length > 0) {
@@ -705,7 +723,10 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE titleType=? AND username=?;', [titleType, username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    throw error;
+                    res.status(404).send({
+                        status: error.code,
+                    });
+                    console.warn(error);
                 });
             }
             if (results.length > 0) {
@@ -753,7 +774,10 @@ class HistoryModel {
                                 db.query('SELECT * FROM history WHERE username=? AND titleId=? AND titleType=?;', [username, currentTitleId, titleType], (error, results, fields) => {
                                     if (error) {
                                         return db.rollback(() => {
-                                            throw error;
+                                            res.status(404).send({
+                                                status: error.code,
+                                            });
+                                            console.warn(error);
                                         });
                                     }
                                     const len = results.length;
