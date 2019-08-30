@@ -53,7 +53,7 @@ class UsersModel {
                     res.send({
                         status: error.code,
                     });
-                    throw error;
+                    console.warn(error);
                 });
             }
             db.commit((err) => {
@@ -62,7 +62,7 @@ class UsersModel {
                         res.send({
                             status: err.code,
                         });
-                        throw err;
+                        console.warn(error);
                     });
                 }
                 console.log = 'User ' + results.insertId + ' added';
