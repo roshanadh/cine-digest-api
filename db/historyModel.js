@@ -98,7 +98,7 @@ class HistoryModel {
                         res.status(404).send({
                             status: error.code,
                         });
-                        throw error;
+                        console.warn(error);
                     });
                 }
                 db.commit((err) => {
@@ -107,7 +107,7 @@ class HistoryModel {
                             res.send({
                                 status: err.code,
                             });
-                            throw err;
+                            console.warn(error);
                         });
                     }
                     console.log = 'Movie ' + titleId + ' added to ' + username + '\'s ' + listType;
