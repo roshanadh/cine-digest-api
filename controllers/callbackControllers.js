@@ -212,14 +212,10 @@ class CallbackController {
                                 });
                             }
                         })
-                        .catch((error) => {
-                            res.json(error);
-                        });
+                        .catch(error => res.json(error));
                 }
             })
-            .catch((error) => {
-                res.sendStatus(error.response.status);
-            });
+            .catch(error => res.sendStatus(error.response.status));
     }
 
     searchShowsByTitle(req, res) {
