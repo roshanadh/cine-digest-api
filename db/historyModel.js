@@ -704,12 +704,11 @@ class HistoryModel {
                         posterPath: row.titlePosterPath,
                     });
                 }
-                res.status(200).send(recentTitles);
-            } else {
-                res.status(404).send({
-                    status: 'NOT-FOUND',
-                });
+                return res.status(200).send(recentTitles);
             }
+            return res.status(404).send({
+                status: 'NOT-FOUND',
+            });
         });
     }
 
@@ -749,7 +748,6 @@ class HistoryModel {
                 default:
                     break;
                 }
-
                 for (let i = len - 1; i >= lowerLimit; i--) {
                     const row = results[i];
                     recentTitles.push({
@@ -758,7 +756,6 @@ class HistoryModel {
                         posterPath: row.titlePosterPath,
                     });
                 }
-
                 if (recentTitles.length > 2) {
                     // Proceed only if atleast 3 titles have been added to lists
                     const recoms = [];
@@ -769,15 +766,15 @@ class HistoryModel {
                     for (let i = 0; i < 3; i++) {
                         titleIds.push(recentTitles[i].titleId);
                         axios.get(`https://api-cine-digest.herokuapp.com/api/v1/${getRecomPath}/${titleIds[i]};`)
-                            .then((response) => {
-                                // console.warn(response);
+                            .then((result) => {
+                                const response = result.data;
+                                console.warn(response.titleIds.length + 'is the len!');
                                 let index = 0;
                                 const upperLimit = response.titleIds.length < 3
                                     ? response.titleIds.length : 3;
-
+                                console.warn(response.titleIds[index]);
                                 // Check if movie is already in a list, if so then don't recommend it
-                                let currentTitleId = response.titleIds[index];
-                                db.query('SELECT * FROM history WHERE username=? AND titleId=? AND titleType=?;', [username, currentTitleId, titleType], (error, results, fields) => {
+                                db.query('SELECT * FROM history WHERE username=? AND titleId=? AND titleType=?;', [username, response.titleIds[index], titleType], (error, results, fields) => {
                                     if (error) {
                                         return db.rollback(() => {
                                             res.send({
@@ -809,10 +806,9 @@ class HistoryModel {
                                 console.warn(error.message);
                             });
                     }
-                    res.status(200).send(recoms);
+                    return res.status(200).send(recoms);
                 }
-            } else {
-                res.status(404).send({
+                return res.status(404).send({
                     status: 'NOT-FOUND',
                 });
             }
