@@ -13,7 +13,7 @@ class UsersModel {
         db.query('SELECT * FROM users WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    res.status(404).send({
+                    res.send({
                         status: error.code,
                     });
                     console.warn(error);

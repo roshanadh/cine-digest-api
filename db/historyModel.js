@@ -34,7 +34,9 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, listType, titleId, titleType], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    res.send({ status: error });
+                    res.send({
+                        status: error.code,
+                    });
                     console.warn(error);
                 });
             }
@@ -95,7 +97,7 @@ class HistoryModel {
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
-                        res.status(404).send({
+                        res.send({
                             status: error.code,
                         });
                         console.warn(error);
@@ -165,7 +167,7 @@ class HistoryModel {
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
-                        res.status(404).send({
+                        res.send({
                             status: error.code,
                         });
                         console.warn(error);
@@ -186,7 +188,7 @@ class HistoryModel {
                     db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
                         if (error) {
                             return db.rollback(() => {
-                                res.status(404).send({
+                                res.send({
                                     status: error.code,
                                 });
                                 console.warn(error);
@@ -199,7 +201,7 @@ class HistoryModel {
                                 ['wishList', titleId, username, titleType],
                                 (error, results, fields) => {
                                     if (error) {
-                                        res.status(404).send({
+                                        res.send({
                                             status: error.code,
                                         });
                                         console.warn(error);
@@ -263,7 +265,7 @@ class HistoryModel {
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
-                        res.status(404).send({
+                        res.send({
                             status: error.code,
                         });
                         console.warn(error);
@@ -333,7 +335,7 @@ class HistoryModel {
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
-                        res.status(404).send({
+                        res.send({
                             status: error.code,
                         });
                         console.warn(error);
@@ -357,7 +359,7 @@ class HistoryModel {
                 db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
                         return db.rollback(() => {
-                            res.status(404).send({
+                            res.send({
                                 status: error.code,
                             });
                             console.warn(error);
@@ -370,7 +372,7 @@ class HistoryModel {
                             ['wishList', titleId, username, titleType],
                             (error, results, fields) => {
                                 if (error) {
-                                    res.status(404).send({
+                                    res.send({
                                         status: error.code,
                                     });
                                     console.warn(error);
@@ -432,7 +434,7 @@ class HistoryModel {
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
-                        res.status(404).send({
+                        res.send({
                             status: error.code,
                         });
                         console.warn(error);
@@ -453,7 +455,7 @@ class HistoryModel {
                 db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
                         return db.rollback(() => {
-                            res.status(404).send({
+                            res.send({
                                 status: error.code,
                             });
                             console.warn(error);
@@ -466,7 +468,7 @@ class HistoryModel {
                             ['wishList', titleId, username, titleType],
                             (error, results, fields) => {
                                 if (error) {
-                                    res.status(404).send({
+                                    res.send({
                                         status: error.code,
                                     });
                                     console.warn(error);
@@ -478,7 +480,7 @@ class HistoryModel {
                     db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'watchingList', titleId, titleType], (error, results, fields) => {
                         if (error) {
                             return db.rollback(() => {
-                                res.status(404).send({
+                                res.send({
                                     status: error.code,
                                 });
                                 console.warn(error);
@@ -491,7 +493,7 @@ class HistoryModel {
                                 ['watchingList', titleId, username, titleType],
                                 (error, results, fields) => {
                                     if (error) {
-                                        res.status(404).send({
+                                        res.send({
                                             status: error.code,
                                         });
                                         console.warn(error);
@@ -537,7 +539,7 @@ class HistoryModel {
             [listType, titleId, username, titleType],
             (error, results, fields) => {
                 if (error) {
-                    res.status(404).send({
+                    res.send({
                         status: error.code,
                     });
                     console.warn(error);
@@ -573,7 +575,9 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleType=?;', [username, listType, titleType], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    res.send({ status: error.code });
+                    res.send({
+                        status: error.code,
+                    });
                     console.warn(error);
                 });
             }
@@ -602,7 +606,7 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    res.status(404).send({
+                    res.send({
                         status: error.code,
                     });
                     console.warn(error);
@@ -669,7 +673,7 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE titleType=? AND username=?;', [titleType, username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    res.status(404).send({
+                    res.send({
                         status: error.code,
                     });
                     console.warn(error);
@@ -723,7 +727,7 @@ class HistoryModel {
         db.query('SELECT * FROM history WHERE titleType=? AND username=?;', [titleType, username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
-                    res.status(404).send({
+                    res.send({
                         status: error.code,
                     });
                     console.warn(error);
@@ -774,7 +778,7 @@ class HistoryModel {
                                 db.query('SELECT * FROM history WHERE username=? AND titleId=? AND titleType=?;', [username, currentTitleId, titleType], (error, results, fields) => {
                                     if (error) {
                                         return db.rollback(() => {
-                                            res.status(404).send({
+                                            res.send({
                                                 status: error.code,
                                             });
                                             console.warn(error);
