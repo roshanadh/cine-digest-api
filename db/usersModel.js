@@ -94,7 +94,7 @@ class UsersModel {
                     res.send({
                         status: error.code,
                     });
-                    throw error;
+                    console.warn(error);
                 });
             }
             console.log(results.length + ' user found!');
