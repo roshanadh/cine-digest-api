@@ -5,7 +5,7 @@ const db = require('./index.js');
 class UsersModel {
     getUser(req, res) {
         if (!req.body.username) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-USERNAME',
             });
         }
@@ -20,13 +20,12 @@ class UsersModel {
                 });
             }
             if (results.length > 0) {
-                res.status(200).send({
+                return res.status(200).send({
                     username,
                     name: results[0].name,
                 });
-            } else {
-                res.status(404).send({ status: 'NOT-FOUND' });
             }
+            return res.status(404).send({ status: 'NOT-FOUND' });
         });
     }
 
@@ -78,11 +77,11 @@ class UsersModel {
 
     verifyUser(req, res) {
         if (!req.body.username) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-USERNAME',
             });
-        } else if (!req.body.password) {
-            res.status(400).send({
+        } if (!req.body.password) {
+            return res.status(400).send({
                 status: 'NO-PASSWORD',
             });
         }
@@ -112,21 +111,20 @@ class UsersModel {
                         // Compare plain password with retrieved hash
                         bcrypt.compare(password, retrievedHash, (err, result) => {
                             if (result === true) {
-                                res.status(200).send({
+                                return res.status(200).send({
                                     status: 'success',
                                 });
-                            } else {
-                                // User exists but incorrect password
-                                res.status(401).send({
-                                    status: 'PASSWORD-MISMATCH',
-                                });
                             }
+                            // User exists but incorrect password
+                            return res.status(401).send({
+                                status: 'PASSWORD-MISMATCH',
+                            });
                         });
                     });
                 });
             } else {
                 // User doesn't exist
-                res.status(404).send({
+                return res.status(404).send({
                     status: 'USERNAME-NOT-FOUND',
                 });
             }
@@ -135,11 +133,11 @@ class UsersModel {
 
     changePassword(req, res) {
         if (!req.body.username) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-USERNAME',
             });
-        } else if (!req.body.newPassword) {
-            res.status(400).send({
+        } if (!req.body.newPassword) {
+            return res.status(400).send({
                 status: 'NO-NEW-PASSWORD',
             });
         }
@@ -167,7 +165,7 @@ class UsersModel {
                     });
                 }
                 console.log = 'User ' + username + '\'s password updated.';
-                res.status(200).send({
+                return res.status(200).send({
                     status: 'success',
                 });
             });
