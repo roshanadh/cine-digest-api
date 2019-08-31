@@ -31,15 +31,15 @@ class UsersModel {
 
     addUser(req, res) {
         if (!req.body.username) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-USERNAME',
             });
-        } else if (!req.body.name) {
-            res.status(400).send({
+        } if (!req.body.name) {
+            return res.status(400).send({
                 status: 'NO-NAME',
             });
-        } else if (!req.body.password) {
-            res.status(400).send({
+        } if (!req.body.password) {
+            return res.status(400).send({
                 status: 'NO-PASSWORD',
             });
         }
@@ -68,7 +68,7 @@ class UsersModel {
                     });
                 }
                 console.log = 'User ' + results.insertId + ' added';
-                res.status(200).send({
+                return res.status(200).send({
                     status: 'success',
                 });
             });
