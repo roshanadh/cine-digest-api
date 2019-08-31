@@ -104,7 +104,6 @@ class UsersModel {
                     console.warn(error);
                 });
             }
-            // console.log(results.length + ' user found!');
             const len = results.length;
             if (len > 0) {
                 // User exists
@@ -191,7 +190,6 @@ class UsersModel {
                 newName,
             } = req.body;
             console.warn('Name not null, username  null!');
-
             db.query('UPDATE users SET name=? WHERE username=?;', [newName, username], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
