@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 const bcrypt = require('bcryptjs');
+const uuidv1 = require('uuid/v1');
 const db = require('./index.js');
 
 class UsersModel {
@@ -49,7 +50,7 @@ class UsersModel {
             password,
         } = req.body;
 
-        db.query('INSERT INTO users(username, name, password) VALUES(?,?,?);', [username, name, password], (error, results, fields) => {
+        db.query('INSERT INTO users(username, uuid, name, password) VALUES(?,?,?,?);', [username, uuidv1(), name, password], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
                     res.send({
