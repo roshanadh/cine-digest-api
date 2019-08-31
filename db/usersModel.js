@@ -20,13 +20,12 @@ class UsersModel {
                 });
             }
             if (results.length > 0) {
-                res.status(200).send({
+                return res.status(200).send({
                     username,
                     name: results[0].name,
                 });
-            } else {
-                res.status(404).send({ status: 'NOT-FOUND' });
             }
+            return res.status(404).send({ status: 'NOT-FOUND' });
         });
     }
 
