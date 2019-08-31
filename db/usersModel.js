@@ -99,7 +99,7 @@ class UsersModel {
                     console.warn(error);
                 });
             }
-            console.log(results.length + ' user found!');
+            // console.log(results.length + ' user found!');
             const len = results.length;
             if (len > 0) {
                 // User exists
