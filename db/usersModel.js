@@ -51,7 +51,9 @@ class UsersModel {
             password,
         } = req.body;
 
-        db.query('INSERT INTO users(username, uuid, name, password) VALUES(?,?,?,?);', [username, uuidv1(), name, password], (error, results, fields) => {
+        const uuid = uuidv1();
+
+        db.query('INSERT INTO users(username, uuid, name, password) VALUES(?,?,?,?);', [username, uuid, name, password], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
                     res.send({
@@ -72,6 +74,7 @@ class UsersModel {
                 console.log = 'User ' + results.insertId + ' added';
                 return res.status(200).send({
                     status: 'success',
+                    uuid,
                 });
             });
         });
