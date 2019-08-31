@@ -356,11 +356,8 @@ class CallbackController {
                         overview,
                     });
                 }
-                return res.sendStatus(404);
             })
-            .catch((error) => {
-                res.sendStatus(error.response.status);
-            });
+            .catch(error => res.sendStatus(error.response.status));
     }
 
     getSeason(req, res) {
