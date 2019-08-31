@@ -5,7 +5,7 @@ const db = require('./index.js');
 class UsersModel {
     getUser(req, res) {
         if (!req.body.username) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-USERNAME',
             });
         }
