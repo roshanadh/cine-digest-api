@@ -41,14 +41,14 @@ router.get('/api/v1/getmr/:id/', CallbackController.getMovieR);
 // https://api.themoviedb.org/3/tv/{tv-show-id}/recommendations?api_key={}
 router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
 
-// Start MySQL database connection
+// User Model
 router.post('/api/v1/getUser/', usersModel.getUser);
 router.post('/api/v1/register/', usersModel.addUser);
 router.post('/api/v1/verify/', usersModel.verifyUser);
 router.post('/api/v1/changePassword/', usersModel.changePassword);
 router.post('/api/v1/updateProfile/', usersModel.updateProfile);
 
-// History model
+// History Model
 router.post('/api/v1/isInList/', historyModel.isInList);
 router.post('/api/v1/addMovieToWishList/', historyModel.addMovieToWishList);
 router.post('/api/v1/addMovieToWatchedList/', historyModel.addMovieToWatchedList);
@@ -63,7 +63,7 @@ router.post('/api/v1/getHistory/', historyModel.getHistory);
 router.post('/api/v1/getStats/', historyModel.getStats);
 
 router.post('/api/v1/getRecentTitles/', historyModel.getRecentTitles);
-router.post('/api/v1/getTitleR/', historyModel.getTitleRecommendations);
+
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
