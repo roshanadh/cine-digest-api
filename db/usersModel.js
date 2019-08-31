@@ -95,7 +95,7 @@ class UsersModel {
             password,
         } = req.body;
 
-        db.query('SELECT password FROM users WHERE username=?;', [username], (error, results, fields) => {
+        db.query('SELECT uuid, password FROM users WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
                     res.send({
@@ -118,6 +118,7 @@ class UsersModel {
                             if (result === true) {
                                 return res.status(200).send({
                                     status: 'success',
+                                    uuid: results[0].uuid,
                                 });
                             }
                             // User exists but incorrect password
