@@ -9,9 +9,13 @@ class UsersModel {
             return res.status(400).send({
                 status: 'NO-USERNAME',
             });
+        } if (!req.body.uuid) {
+            return res.status(400).send({
+                status: 'NO-UUID',
+            });
         }
-        const { username } = req.body;
-        db.query('SELECT * FROM users WHERE username=?;', [username], (error, results, fields) => {
+        const { username, uuid } = req.body;
+        db.query('SELECT * FROM users WHERE uuid=?;', [uuid], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
                     res.send({
@@ -182,15 +186,20 @@ class UsersModel {
             return res.status(400).send({
                 status: 'NO-USERNAME',
             });
+        } if (!req.body.uuid) {
+            return res.status(400).send({
+                status: 'NO-UUID',
+            });
         }
 
         if (!req.body.newUsername && req.body.newName) {
             const {
                 username,
+                uuid,
                 newName,
             } = req.body;
             console.warn('Name not null, username  null!');
-            db.query('UPDATE users SET name=? WHERE username=?;', [newName, username], (error, results, fields) => {
+            db.query('UPDATE users SET name=? WHERE uuid=?;', [newName, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -217,12 +226,13 @@ class UsersModel {
         } else if (req.body.newUsername && req.body.newName) {
             const {
                 username,
+                uuid,
                 newName,
                 newUsername,
             } = req.body;
             console.warn('Name not null, username not null!');
 
-            db.query('UPDATE users SET name=?, username=? WHERE username=?;', [newName, newUsername, username], (error, results, fields) => {
+            db.query('UPDATE users SET name=?, username=? WHERE uuid=?;', [newName, newUsername, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -244,7 +254,7 @@ class UsersModel {
             });
             // Since username is also used in ...
             // history table, update history table as well
-            db.query('UPDATE history SET username=? WHERE username=?;', [newUsername, username], (error, results, fields) => {
+            db.query('UPDATE history SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -269,10 +279,11 @@ class UsersModel {
             const {
                 username,
                 newUsername,
+                uuid,
             } = req.body;
             console.warn('Name null, username not null!');
 
-            db.query('UPDATE users SET username=? WHERE username=?;', [newUsername, username], (error, results, fields) => {
+            db.query('UPDATE users SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -294,7 +305,7 @@ class UsersModel {
             });
             // Since username is also used in ...
             // history table, update history table as well
-            db.query('UPDATE history SET username=? WHERE username=?;', [newUsername, username], (error, results, fields) => {
+            db.query('UPDATE history SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
