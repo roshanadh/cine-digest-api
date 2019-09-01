@@ -43,6 +43,7 @@ connection.on('error', (err) => {
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         handleDisconnect();
     } else {
+        console.log(err.code);
         throw err;
     }
 });
