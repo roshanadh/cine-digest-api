@@ -2,15 +2,13 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable no-shadow */
 /* eslint-disable consistent-return */
-const axios = require('axios');
-const querystring = require('querystring');
 const db = require('./index.js');
 
 class HistoryModel {
     isInList(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             return res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         }
         if (!req.body.titleId) {
@@ -30,9 +28,9 @@ class HistoryModel {
                 listType,
                 titleId,
                 titleType,
-                username,
+                uuid,
             } = req.body;
-            db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, listType, titleId, titleType], (error, results, fields) => {
+            db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, listType, titleId, titleType], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -53,9 +51,9 @@ class HistoryModel {
             const {
                 titleId,
                 titleType,
-                username,
+                uuid,
             } = req.body;
-            db.query('SELECT * FROM history WHERE username=? AND titleId=? AND titleType=?;', [username, titleId, titleType], (error, results, fields) => {
+            db.query('SELECT * FROM history WHERE uuid=? AND titleId=? AND titleType=?;', [uuid, titleId, titleType], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -75,9 +73,9 @@ class HistoryModel {
     }
 
     addMovieToWishList(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         } else if (!req.body.listType) {
             res.status(400).send({
@@ -114,11 +112,11 @@ class HistoryModel {
             titleVoteAverage,
             titlePosterPath,
             titleType,
-            username,
+            uuid,
         } = req.body;
 
-        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, username) VALUES (?,?,?,?,?,?,?,?,?);',
-            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
+        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
+            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -136,7 +134,7 @@ class HistoryModel {
                             console.warn(error);
                         });
                     }
-                    console.log = 'Movie ' + titleId + ' added to ' + username + '\'s ' + listType;
+                    console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
                     res.status(200).send({
                         status: 'success',
                     });
@@ -145,9 +143,9 @@ class HistoryModel {
     }
 
     addMovieToWatchedList(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         } else if (!req.body.listType) {
             res.status(400).send({
@@ -184,11 +182,11 @@ class HistoryModel {
             titleVoteAverage,
             titlePosterPath,
             titleType,
-            username,
+            uuid,
         } = req.body;
 
-        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, username) VALUES (?,?,?,?,?,?,?,?,?);',
-            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
+        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
+            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -206,10 +204,10 @@ class HistoryModel {
                             console.warn(err);
                         });
                     }
-                    console.log = 'Movie ' + titleId + ' added to ' + username + '\'s ' + listType;
+                    console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
 
                     // Added to watchedList, now check if movie is present in wishlist (then remove)
-                    db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
+                    db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
                         if (error) {
                             return db.rollback(() => {
                                 res.send({
@@ -221,8 +219,8 @@ class HistoryModel {
                         if (results.length > 0) {
                             // Movie is in wishList..
                             // so remove it from wishList
-                            db.query('DELETE FROM history WHERE listType=? AND titleId=? AND username=? AND titleType=?;',
-                                ['wishList', titleId, username, titleType],
+                            db.query('DELETE FROM history WHERE listType=? AND titleId=? AND uuid=? AND titleType=?;',
+                                ['wishList', titleId, uuid, titleType],
                                 (error, results, fields) => {
                                     if (error) {
                                         console.warn(error);
@@ -243,9 +241,9 @@ class HistoryModel {
     }
 
     addShowToWishList(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         } else if (!req.body.listType) {
             res.status(400).send({
@@ -282,11 +280,11 @@ class HistoryModel {
             titleVoteAverage,
             titlePosterPath,
             titleType,
-            username,
+            uuid,
         } = req.body;
 
-        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, username) VALUES (?,?,?,?,?,?,?,?,?);',
-            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
+        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
+            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -304,7 +302,7 @@ class HistoryModel {
                             console.warn(err);
                         });
                     }
-                    console.log = 'Movie ' + titleId + ' added to ' + username + '\'s ' + listType;
+                    console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
                     res.status(200).send({
                         status: 'success',
                     });
@@ -313,9 +311,9 @@ class HistoryModel {
     }
 
     addShowToWatchingList(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         } else if (!req.body.listType) {
             res.status(400).send({
@@ -352,11 +350,11 @@ class HistoryModel {
             titleVoteAverage,
             titlePosterPath,
             titleType,
-            username,
+            uuid,
         } = req.body;
 
-        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, username) VALUES (?,?,?,?,?,?,?,?,?);',
-            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
+        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
+            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -374,13 +372,13 @@ class HistoryModel {
                             console.warn(err);
                         });
                     }
-                    console.log = 'Show ' + titleId + ' added to ' + username + '\'s ' + listType;
+                    console.log = 'Show ' + titleId + ' added to ' + uuid + '\'s ' + listType;
                     res.status(200).send({
                         status: 'success',
                     });
                 });
                 // Added to watchingList, now check if show is present in wishlist (then remove)
-                db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
+                db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
                         return db.rollback(() => {
                             res.send({
@@ -392,8 +390,8 @@ class HistoryModel {
                     if (results.length > 0) {
                         // Show is in wishList..
                         // so remove it from wishList
-                        db.query('DELETE FROM history WHERE listType=? AND titleId=? AND username=? AND titleType=?;',
-                            ['wishList', titleId, username, titleType],
+                        db.query('DELETE FROM history WHERE listType=? AND titleId=? AND uuid=? AND titleType=?;',
+                            ['wishList', titleId, uuid, titleType],
                             (error, results, fields) => {
                                 if (error) {
                                     console.warn(error);
@@ -412,9 +410,9 @@ class HistoryModel {
     }
 
     addShowToWatchedList(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         } else if (!req.body.listType) {
             res.status(400).send({
@@ -451,11 +449,11 @@ class HistoryModel {
             titleVoteAverage,
             titlePosterPath,
             titleType,
-            username,
+            uuid,
         } = req.body;
 
-        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, username) VALUES (?,?,?,?,?,?,?,?,?);',
-            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, username], (error, results, fields) => {
+        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
+            [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
@@ -473,10 +471,10 @@ class HistoryModel {
                             console.warn(err);
                         });
                     }
-                    console.log = 'Show ' + titleId + ' added to ' + username + '\'s ' + listType;
+                    console.log = 'Show ' + titleId + ' added to ' + uuid + '\'s ' + listType;
                 });
                 // Added to watchedList, now check if show is present in wishlist (then remove)
-                db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'wishList', titleId, titleType], (error, results, fields) => {
+                db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
                         return db.rollback(() => {
                             res.send({
@@ -488,8 +486,8 @@ class HistoryModel {
                     if (results.length > 0) {
                         // Show is in wishList..
                         // so remove it from wishList
-                        db.query('DELETE FROM history WHERE listType=? AND titleId=? AND username=? AND titleType=?;',
-                            ['wishList', titleId, username, titleType],
+                        db.query('DELETE FROM history WHERE listType=? AND titleId=? AND uuid=? AND titleType=?;',
+                            ['wishList', titleId, uuid, titleType],
                             (error, results, fields) => {
                                 if (error) {
                                     console.warn(error);
@@ -501,7 +499,7 @@ class HistoryModel {
                             });
                     }
                     // Check to see if it is in watchingList (then remove it)
-                    db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleId=? AND titleType=?;', [username, 'watchingList', titleId, titleType], (error, results, fields) => {
+                    db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'watchingList', titleId, titleType], (error, results, fields) => {
                         if (error) {
                             return db.rollback(() => {
                                 res.send({
@@ -513,8 +511,8 @@ class HistoryModel {
                         if (results.length > 0) {
                             // Show is in watchingList..
                             // so remove it from watchingList
-                            db.query('DELETE FROM history WHERE listType=? AND titleId=? AND username=? AND titleType=?;',
-                                ['watchingList', titleId, username, titleType],
+                            db.query('DELETE FROM history WHERE listType=? AND titleId=? AND uuid=? AND titleType=?;',
+                                ['watchingList', titleId, uuid, titleType],
                                 (error, results, fields) => {
                                     if (error) {
                                         console.warn(error);
@@ -534,9 +532,9 @@ class HistoryModel {
     }
 
     removeFromList(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         } else if (!req.body.listType) {
             res.status(400).send({
@@ -552,12 +550,12 @@ class HistoryModel {
             // If titleId is not specified, empty the specified list
             const {
                 listType,
-                username,
+                uuid,
                 titleType,
             } = req.body;
 
-            db.query('DELETE FROM history WHERE listType=? AND username=? AND titleType=?;',
-                [listType, username, titleType],
+            db.query('DELETE FROM history WHERE listType=? AND uuid=? AND titleType=?;',
+                [listType, uuid, titleType],
                 (error, results, fields) => {
                     if (error) {
                         console.warn(error);
@@ -575,12 +573,12 @@ class HistoryModel {
             const {
                 listType,
                 titleId,
-                username,
+                uuid,
                 titleType,
             } = req.body;
 
-            db.query('DELETE FROM history WHERE listType=? AND titleId=? AND username=? AND titleType=?;',
-                [listType, titleId, username, titleType],
+            db.query('DELETE FROM history WHERE listType=? AND titleId=? AND uuid=? AND titleType=?;',
+                [listType, titleId, uuid, titleType],
                 (error, results, fields) => {
                     if (error) {
                         console.warn(error);
@@ -597,9 +595,9 @@ class HistoryModel {
     }
 
     getHistory(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             return res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         } if (!req.body.listType) {
             return res.status(400).send({
@@ -613,11 +611,11 @@ class HistoryModel {
 
         const {
             listType,
-            username,
+            uuid,
             titleType,
         } = req.body;
 
-        db.query('SELECT * FROM history WHERE username=? AND listType=? AND titleType=?;', [username, listType, titleType], (error, results, fields) => {
+        db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleType=?;', [uuid, listType, titleType], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
                     res.send({
@@ -639,15 +637,15 @@ class HistoryModel {
     }
 
     getStats(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         }
 
-        const { username } = req.body;
+        const { uuid } = req.body;
 
-        db.query('SELECT * FROM history WHERE username=?;', [username], (error, results, fields) => {
+        db.query('SELECT * FROM history WHERE uuid=?;', [uuid], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
                     res.send({
@@ -703,9 +701,9 @@ class HistoryModel {
     }
 
     getRecentTitles(req, res) {
-        if (!req.body.username) {
+        if (!req.body.uuid) {
             res.status(400).send({
-                status: 'NO-USERNAME',
+                status: 'NO-UUID',
             });
         } else if (!req.body.titleType) {
             res.status(400).send({
@@ -713,8 +711,8 @@ class HistoryModel {
             });
         }
 
-        const { username, titleType } = req.body;
-        db.query('SELECT * FROM history WHERE titleType=? AND username=?;', [titleType, username], (error, results, fields) => {
+        const { uuid, titleType } = req.body;
+        db.query('SELECT * FROM history WHERE titleType=? AND uuid=?;', [titleType, uuid], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
                     res.send({
