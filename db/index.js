@@ -40,7 +40,6 @@ connection.connect((err) => {
 
 
 connection.on('error', (err) => {
-    console.log('DB error', err);
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         handleDisconnect();
     } else {
