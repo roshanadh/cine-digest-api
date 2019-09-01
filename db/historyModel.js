@@ -373,9 +373,6 @@ class HistoryModel {
                         });
                     }
                     console.log = 'Show ' + titleId + ' added to ' + uuid + '\'s ' + listType;
-                    return res.status(200).send({
-                        status: 'success',
-                    });
                 });
                 // Added to watchingList, now check if show is present in wishlist (then remove)
                 db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
