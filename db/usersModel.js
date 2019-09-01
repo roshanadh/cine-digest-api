@@ -225,7 +225,6 @@ class UsersModel {
             });
         } else if (req.body.newUsername && req.body.newName) {
             const {
-                username,
                 uuid,
                 newName,
                 newUsername,
@@ -250,62 +249,17 @@ class UsersModel {
                             console.warn(err);
                         });
                     }
-                });
-            });
-            // Since username is also used in ...
-            // history table, update history table as well
-            db.query('UPDATE history SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
-                if (error) {
-                    return db.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
-                    });
-                }
-                db.commit((err) => {
-                    if (err) {
-                        return db.rollback(() => {
-                            res.send({
-                                status: err.code,
-                            });
-                            console.warn(err);
-                        });
-                    }
                     res.status(200).send({ status: 'success' });
                 });
             });
         } else if (req.body.newUsername && !req.body.newName) {
             const {
-                username,
                 newUsername,
                 uuid,
             } = req.body;
             console.warn('Name null, username not null!');
 
             db.query('UPDATE users SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
-                if (error) {
-                    return db.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
-                    });
-                }
-                db.commit((err) => {
-                    if (err) {
-                        return db.rollback(() => {
-                            res.send({
-                                status: err.code,
-                            });
-                            console.warn(err);
-                        });
-                    }
-                });
-            });
-            // Since username is also used in ...
-            // history table, update history table as well
-            db.query('UPDATE history SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
                         res.send({
