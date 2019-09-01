@@ -396,9 +396,6 @@ class HistoryModel {
                                         status: error.code,
                                     });
                                 }
-                                return res.status(200).send({
-                                    status: 'success',
-                                });
                                 // Removed from wishList, and has been added to watchingList
                             });
                     }
