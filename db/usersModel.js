@@ -218,7 +218,7 @@ class UsersModel {
                         });
                     }
                     console.log = 'User ' + username + '\'s password updated.';
-                    res.status(200).send({
+                    return res.status(200).send({
                         status: 'success',
                     });
                 });
@@ -249,7 +249,7 @@ class UsersModel {
                             console.warn(err);
                         });
                     }
-                    res.status(200).send({ status: 'success' });
+                    return res.status(200).send({ status: 'success' });
                 });
             });
         } else if (req.body.newUsername && !req.body.newName) {
@@ -277,12 +277,12 @@ class UsersModel {
                             console.warn(err);
                         });
                     }
-                    res.status(200).send({ status: 'success' });
+                    return res.status(200).send({ status: 'success' });
                 });
             });
         } else {
             console.warn('Username and Name both null!');
-            res.status(404).send({ status: 'NO-FIELD-TO-CHANGE' });
+            return res.status(404).send({ status: 'NO-FIELD-TO-CHANGE' });
         }
     }
 }
