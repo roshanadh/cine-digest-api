@@ -353,7 +353,7 @@ class HistoryModel {
             uuid,
         } = req.body;
 
-        db.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
+        db.query('INSERT INTO history(listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
                     return db.rollback(() => {
@@ -399,6 +399,9 @@ class HistoryModel {
                                         status: error.code,
                                     });
                                 }
+                                return res.status(200).send({
+                                    status: 'success',
+                                });
                                 // Removed from wishList, and has been added to watchingList
                             });
                     }
