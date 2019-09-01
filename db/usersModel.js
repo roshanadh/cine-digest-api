@@ -5,16 +5,12 @@ const db = require('./index.js');
 
 class UsersModel {
     getUser(req, res) {
-        if (!req.body.username) {
-            return res.status(400).send({
-                status: 'NO-USERNAME',
-            });
-        } if (!req.body.uuid) {
+        if (!req.body.uuid) {
             return res.status(400).send({
                 status: 'NO-UUID',
             });
         }
-        const { username, uuid } = req.body;
+        const { uuid } = req.body;
         db.query('SELECT * FROM users WHERE uuid=?;', [uuid], (error, results, fields) => {
             if (error) {
                 return db.rollback(() => {
@@ -26,9 +22,9 @@ class UsersModel {
             }
             if (results.length > 0) {
                 return res.status(200).send({
-                    username,
+                    username: results[0].username,
                     name: results[0].name,
-                    uuid: results[0].uuid,
+                    uuid,
                 });
             }
             return res.status(404).send({ status: 'NOT-FOUND' });
