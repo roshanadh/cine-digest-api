@@ -74,22 +74,22 @@ class HistoryModel {
 
     addMovieToWishList(req, res) {
         if (!req.body.uuid) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-UUID',
             });
-        } else if (!req.body.listType) {
-            res.status(400).send({
+        } if (!req.body.listType) {
+            return res.status(400).send({
                 status: 'NO-LIST-TYPE',
             });
-        } else if (!req.body.titleId) {
-            res.status(400).send({
+        } if (!req.body.titleId) {
+            return res.status(400).send({
                 status: 'NO-TITLE-ID',
             });
-        } else if (!req.body.titleName) {
-            res.status(400).send({
+        } if (!req.body.titleName) {
+            return res.status(400).send({
                 status: 'NO-TITLE-NAME',
             });
-        } else if (!req.body.titleOverview) {
+        } if (!req.body.titleOverview) {
             console.warn('NO titleOverview');
         } else if (!req.body.titleVoteCount) {
             console.warn('NO titleVoteCount');
@@ -98,7 +98,7 @@ class HistoryModel {
         } else if (!req.body.titlePosterPath) {
             console.warn('NO titlePosterPath');
         } else if (!req.body.titleType) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-TITLE-TYPE',
             });
         }
@@ -135,7 +135,7 @@ class HistoryModel {
                         });
                     }
                     console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
-                    res.status(200).send({
+                    return res.status(200).send({
                         status: 'success',
                     });
                 });
@@ -144,22 +144,22 @@ class HistoryModel {
 
     addMovieToWatchedList(req, res) {
         if (!req.body.uuid) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-UUID',
             });
-        } else if (!req.body.listType) {
-            res.status(400).send({
+        } if (!req.body.listType) {
+            return res.status(400).send({
                 status: 'NO-LIST-TYPE',
             });
-        } else if (!req.body.titleId) {
-            res.status(400).send({
+        } if (!req.body.titleId) {
+            return res.status(400).send({
                 status: 'NO-TITLE-ID',
             });
-        } else if (!req.body.titleName) {
-            res.status(400).send({
+        } if (!req.body.titleName) {
+            return res.status(400).send({
                 status: 'NO-TITLE-NAME',
             });
-        } else if (!req.body.titleOverview) {
+        } if (!req.body.titleOverview) {
             console.warn('NO titleOverview');
         } else if (!req.body.titleVoteCount) {
             console.warn('NO titleVoteCount');
@@ -168,7 +168,7 @@ class HistoryModel {
         } else if (!req.body.titlePosterPath) {
             console.warn('NO titlePosterPath');
         } else if (!req.body.titleType) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-TITLE-TYPE',
             });
         }
@@ -232,7 +232,7 @@ class HistoryModel {
                                     // console.log('Deleted ' + results.affectedRows + ' rows from wishList');
                                 });
                         }
-                        res.status(200).send({
+                        return res.status(200).send({
                             status: 'success',
                         });
                     });
@@ -242,22 +242,22 @@ class HistoryModel {
 
     addShowToWishList(req, res) {
         if (!req.body.uuid) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-UUID',
             });
-        } else if (!req.body.listType) {
-            res.status(400).send({
+        } if (!req.body.listType) {
+            return res.status(400).send({
                 status: 'NO-LIST-TYPE',
             });
-        } else if (!req.body.titleId) {
-            res.status(400).send({
+        } if (!req.body.titleId) {
+            return res.status(400).send({
                 status: 'NO-TITLE-ID',
             });
-        } else if (!req.body.titleName) {
-            res.status(400).send({
+        } if (!req.body.titleName) {
+            return res.status(400).send({
                 status: 'NO-TITLE-NAME',
             });
-        } else if (!req.body.titleOverview) {
+        } if (!req.body.titleOverview) {
             console.warn('NO titleOverview');
         } else if (!req.body.titleVoteCount) {
             console.warn('NO titleVoteCount');
@@ -266,7 +266,7 @@ class HistoryModel {
         } else if (!req.body.titlePosterPath) {
             console.warn('NO titlePosterPath');
         } else if (!req.body.titleType) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-TITLE-TYPE',
             });
         }
@@ -303,7 +303,7 @@ class HistoryModel {
                         });
                     }
                     console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
-                    res.status(200).send({
+                    return res.status(200).send({
                         status: 'success',
                     });
                 });
@@ -312,22 +312,22 @@ class HistoryModel {
 
     addShowToWatchingList(req, res) {
         if (!req.body.uuid) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-UUID',
             });
-        } else if (!req.body.listType) {
-            res.status(400).send({
+        } if (!req.body.listType) {
+            return res.status(400).send({
                 status: 'NO-LIST-TYPE',
             });
-        } else if (!req.body.titleId) {
-            res.status(400).send({
+        } if (!req.body.titleId) {
+            return res.status(400).send({
                 status: 'NO-TITLE-ID',
             });
-        } else if (!req.body.titleName) {
-            res.status(400).send({
+        } if (!req.body.titleName) {
+            return res.status(400).send({
                 status: 'NO-TITLE-NAME',
             });
-        } else if (!req.body.titleOverview) {
+        } if (!req.body.titleOverview) {
             console.warn('NO titleOverview');
         } else if (!req.body.titleVoteCount) {
             console.warn('NO titleVoteCount');
@@ -336,7 +336,7 @@ class HistoryModel {
         } else if (!req.body.titlePosterPath) {
             console.warn('NO titlePosterPath');
         } else if (!req.body.titleType) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-TITLE-TYPE',
             });
         }
@@ -373,7 +373,7 @@ class HistoryModel {
                         });
                     }
                     console.log = 'Show ' + titleId + ' added to ' + uuid + '\'s ' + listType;
-                    res.status(200).send({
+                    return res.status(200).send({
                         status: 'success',
                     });
                 });
@@ -402,7 +402,7 @@ class HistoryModel {
                                 // Removed from wishList, and has been added to watchingList
                             });
                     }
-                    res.status(200).send({
+                    return res.status(200).send({
                         status: 'success',
                     });
                 });
@@ -411,22 +411,22 @@ class HistoryModel {
 
     addShowToWatchedList(req, res) {
         if (!req.body.uuid) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-UUID',
             });
-        } else if (!req.body.listType) {
-            res.status(400).send({
+        } if (!req.body.listType) {
+            return res.status(400).send({
                 status: 'NO-LIST-TYPE',
             });
-        } else if (!req.body.titleId) {
-            res.status(400).send({
+        } if (!req.body.titleId) {
+            return res.status(400).send({
                 status: 'NO-TITLE-ID',
             });
-        } else if (!req.body.titleName) {
-            res.status(400).send({
+        } if (!req.body.titleName) {
+            return res.status(400).send({
                 status: 'NO-TITLE-NAME',
             });
-        } else if (!req.body.titleOverview) {
+        } if (!req.body.titleOverview) {
             console.warn('NO titleOverview');
         } else if (!req.body.titleVoteCount) {
             console.warn('NO titleVoteCount');
@@ -435,7 +435,7 @@ class HistoryModel {
         } else if (!req.body.titlePosterPath) {
             console.warn('NO titlePosterPath');
         } else if (!req.body.titleType) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-TITLE-TYPE',
             });
         }
@@ -533,15 +533,15 @@ class HistoryModel {
 
     removeFromList(req, res) {
         if (!req.body.uuid) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-UUID',
             });
-        } else if (!req.body.listType) {
-            res.status(400).send({
+        } if (!req.body.listType) {
+            return res.status(400).send({
                 status: 'NO-LIST-TYPE',
             });
-        } else if (!req.body.titleType) {
-            res.status(400).send({
+        } if (!req.body.titleType) {
+            return res.status(400).send({
                 status: 'NO-TITLE-TYPE',
             });
         }
@@ -638,7 +638,7 @@ class HistoryModel {
 
     getStats(req, res) {
         if (!req.body.uuid) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-UUID',
             });
         }
@@ -683,7 +683,7 @@ class HistoryModel {
                         }
                     }
                 }
-                res.status(200).send({
+                return res.status(200).send({
                     listedMovies,
                     listedShows,
                     listedInWishMovies,
@@ -692,21 +692,20 @@ class HistoryModel {
                     listedInWatchedShows,
                     listedInWatchingShows,
                 });
-            } else {
-                res.status(404).send({
-                    status: 'NOT-FOUND',
-                });
             }
+            return res.status(404).send({
+                status: 'NOT-FOUND',
+            });
         });
     }
 
     getRecentTitles(req, res) {
         if (!req.body.uuid) {
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'NO-UUID',
             });
-        } else if (!req.body.titleType) {
-            res.status(400).send({
+        } if (!req.body.titleType) {
+            return res.status(400).send({
                 status: 'NO-TITLE-TYPE',
             });
         }
