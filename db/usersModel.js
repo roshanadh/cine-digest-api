@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 const bcrypt = require('bcryptjs');
 const uuidv1 = require('uuid/v1');
-const db = require('./index.js');
+const pool = require('./index.js');
 
 class UsersModel {
     getUser(req, res) {
@@ -11,9 +11,9 @@ class UsersModel {
             });
         }
         const { uuid } = req.body;
-        db.query('SELECT * FROM users WHERE uuid=?;', [uuid], (error, results, fields) => {
+        pool.query('SELECT * FROM users WHERE uuid=?;', [uuid], (error, results, fields) => {
             if (error) {
-                return db.rollback(() => {
+                return pool.rollback(() => {
                     res.send({
                         status: error.code,
                     });
@@ -53,29 +53,19 @@ class UsersModel {
 
         const uuid = uuidv1();
 
-        db.query('INSERT INTO users(username, uuid, name, password) VALUES(?,?,?,?);', [username, uuid, name, password], (error, results, fields) => {
+        pool.query('INSERT INTO users(username, uuid, name, password) VALUES(?,?,?,?);', [username, uuid, name, password], (error, results, fields) => {
             if (error) {
-                return db.rollback(() => {
+                return pool.rollback(() => {
                     res.send({
                         status: error.code,
                     });
                     console.warn(error);
                 });
             }
-            db.commit((err) => {
-                if (err) {
-                    return db.rollback(() => {
-                        res.send({
-                            status: err.code,
-                        });
-                        console.warn(error);
-                    });
-                }
-                console.log = 'User ' + results.insertId + ' added';
-                return res.status(200).send({
-                    status: 'success',
-                    uuid,
-                });
+            console.log = 'User ' + results.insertId + ' added';
+            return res.status(200).send({
+                status: 'success',
+                uuid,
             });
         });
     }
@@ -95,9 +85,9 @@ class UsersModel {
             password,
         } = req.body;
 
-        db.query('SELECT uuid, password FROM users WHERE username=?;', [username], (error, results, fields) => {
+        pool.query('SELECT uuid, password FROM users WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
-                return db.rollback(() => {
+                return pool.rollback(() => {
                     res.send({
                         status: error.code,
                     });
@@ -151,28 +141,18 @@ class UsersModel {
             newPassword,
         } = req.body;
 
-        db.query('UPDATE users SET password=? WHERE username=?;', [newPassword, username], (error, results, fields) => {
+        pool.query('UPDATE users SET password=? WHERE username=?;', [newPassword, username], (error, results, fields) => {
             if (error) {
-                return db.rollback(() => {
+                return pool.rollback(() => {
                     res.send({
                         status: error.code,
                     });
                     console.warn(error);
                 });
             }
-            db.commit((err) => {
-                if (err) {
-                    return db.rollback(() => {
-                        res.send({
-                            status: err.code,
-                        });
-                        console.warn(err);
-                    });
-                }
-                console.log = 'User ' + username + '\'s password updated.';
-                return res.status(200).send({
-                    status: 'success',
-                });
+            console.log = 'User ' + username + '\'s password updated.';
+            return res.status(200).send({
+                status: 'success',
             });
         });
     }
@@ -195,28 +175,18 @@ class UsersModel {
                 newName,
             } = req.body;
             console.warn('Name not null, username  null!');
-            db.query('UPDATE users SET name=? WHERE uuid=?;', [newName, uuid], (error, results, fields) => {
+            pool.query('UPDATE users SET name=? WHERE uuid=?;', [newName, uuid], (error, results, fields) => {
                 if (error) {
-                    return db.rollback(() => {
+                    return pool.rollback(() => {
                         res.send({
                             status: error.code,
                         });
                         console.warn(error);
                     });
                 }
-                db.commit((err) => {
-                    if (err) {
-                        return db.rollback(() => {
-                            res.send({
-                                status: err.code,
-                            });
-                            console.warn(err);
-                        });
-                    }
-                    console.log = 'User ' + username + '\'s password updated.';
-                    return res.status(200).send({
-                        status: 'success',
-                    });
+                console.log = 'User ' + username + '\'s password updated.';
+                return res.status(200).send({
+                    status: 'success',
                 });
             });
         } else if (req.body.newUsername && req.body.newName) {
@@ -227,26 +197,16 @@ class UsersModel {
             } = req.body;
             console.warn('Name not null, username not null!');
 
-            db.query('UPDATE users SET name=?, username=? WHERE uuid=?;', [newName, newUsername, uuid], (error, results, fields) => {
+            pool.query('UPDATE users SET name=?, username=? WHERE uuid=?;', [newName, newUsername, uuid], (error, results, fields) => {
                 if (error) {
-                    return db.rollback(() => {
+                    return pool.rollback(() => {
                         res.send({
                             status: error.code,
                         });
                         console.warn(error);
                     });
                 }
-                db.commit((err) => {
-                    if (err) {
-                        return db.rollback(() => {
-                            res.send({
-                                status: err.code,
-                            });
-                            console.warn(err);
-                        });
-                    }
-                    return res.status(200).send({ status: 'success' });
-                });
+                return res.status(200).send({ status: 'success' });
             });
         } else if (req.body.newUsername && !req.body.newName) {
             const {
@@ -255,26 +215,16 @@ class UsersModel {
             } = req.body;
             console.warn('Name null, username not null!');
 
-            db.query('UPDATE users SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
+            pool.query('UPDATE users SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
                 if (error) {
-                    return db.rollback(() => {
+                    return pool.rollback(() => {
                         res.send({
                             status: error.code,
                         });
                         console.warn(error);
                     });
                 }
-                db.commit((err) => {
-                    if (err) {
-                        return db.rollback(() => {
-                            res.send({
-                                status: err.code,
-                            });
-                            console.warn(err);
-                        });
-                    }
-                    return res.status(200).send({ status: 'success' });
-                });
+                return res.status(200).send({ status: 'success' });
             });
         } else {
             console.warn('Username and Name both null!');
