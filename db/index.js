@@ -17,34 +17,53 @@ const dbConfig = {
 };
 
 let connection = mysql.createConnection(dbConfig);
-const handleDisconnect = () => {
-    connection = mysql.createConnection(dbConfig);
+const handleDisconnect = (connection) => {
+    if (connection) {
+        // Destroy current connection
+        connection.destroy();
+    }
+    // Create a new connection
+    const conn = mysql.createConnection(dbConfig);
     connection.connect((err) => {
         if (err) {
-            console.log('error connecting: ' + err.stack);
-            throw err;
+            console.log('Error connecting: ' + err.stack);
+            setTimeout(handleDisconnect, 2000);
+        } else {
+            console.log('After reconnect, connected as ID: ' + connection.threadId);
+            return conn;
         }
-
-        console.log('After reconnect, connected as ID: ' + connection.threadId);
     });
 };
 
 connection.connect((err) => {
     if (err) {
         console.log('error connecting: ' + err.stack);
-        setTimeout(handleDisconnect, 2000);
+        connection = handleDisconnect(connection);
     }
-
     console.log('Connected as ID: ' + connection.threadId);
 });
 
 
-connection.on('error', (err) => {
+connection.on('error', (err) => {    
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-        handleDisconnect();
+        // Connection closed by server
+        console.log('Cannot establish a connection with the database. ' + err.code);
+        connection = handleDisconnect(connection);
+    } else if (err.code === 'PROTOCOL_ENQUEUE_AFTER_QUIT') {
+        // PROTOCOL_ENQUEUE_AFTER-QUIT
+        console.log('Cannot establish a connection with the database. ' + err.code);
+        connection = handleDisconnect(connection);
+    } else if (err.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
+        // connection variable must be recreated
+        console.log('Cannot establish a connection with the database. ' + err.code);
+        connection = handleDisconnect(connection);
+    } else if (err.code === 'PROTOCOL_ENQUEUE_HANDSHAKE_TWICE') {
+        // Connection is already being established
+        console.log('Cannot establish a connection with the database. ' + err.code);
     } else {
-        console.log(err.code);
-        throw err;
+        // Anything else
+        console.log('Cannot establish a connection with the database. ' + err.code);
+        connection = handleDisconnect(connection);
     }
 });
 
