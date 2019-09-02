@@ -182,13 +182,23 @@ class CallbackController {
                             const responseBody = response.data;
 
                             const credits = [];
+                            const directors = [];
+                            const directorsProfilePath = [];
                             const creditsProfilePath = [];
                             if (responseStatus === 200) {
-                                const { cast } = responseBody;
-                                const castLength = cast.length <= 6 ? cast.length : 6;
-                                for (let i = 0; i < castLength; i++) {
+                                const { cast, crew } = responseBody;
+                                // Get only the first 6 cast details
+                                const safeLength = cast.length <= 6 ? cast.length : 6;
+                                for (let i = 0; i < safeLength; i++) {
                                     credits[i] = cast[i].name;
                                     creditsProfilePath[i] = cast[i].profile_path;
+                                }
+                                // Get directors
+                                for (let i = 0; i < cast.length; i++) {
+                                    if (crew[i].job === 'Director') {
+                                        directors.push(crew[i].name);
+                                        directorsProfilePath.push(crew[i].profile_path);
+                                    }
                                 }
                                 return res.status(200).json({
                                     id,
@@ -201,6 +211,8 @@ class CallbackController {
                                     genres,
                                     credits,
                                     creditsProfilePath,
+                                    directors,
+                                    directorsProfilePath,
                                     backdrop_path,
                                     budget,
                                     revenue,
