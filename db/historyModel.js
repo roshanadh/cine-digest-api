@@ -195,46 +195,36 @@ class HistoryModel {
                         console.warn(error);
                     });
                 }
-                db.commit((err) => {
-                    if (err) {
+                console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
+
+                // Added to watchedList, now check if movie is present in wishlist (then remove)
+                db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
+                    if (error) {
                         return db.rollback(() => {
                             res.send({
-                                status: err.code,
+                                status: error.code,
                             });
-                            console.warn(err);
+                            console.warn(error);
                         });
                     }
-                    console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
-
-                    // Added to watchedList, now check if movie is present in wishlist (then remove)
-                    db.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
-                        if (error) {
-                            return db.rollback(() => {
-                                res.send({
-                                    status: error.code,
-                                });
-                                console.warn(error);
+                    if (results.length > 0) {
+                        // Movie is in wishList..
+                        // so remove it from wishList
+                        db.query('DELETE FROM history WHERE listType=? AND titleId=? AND uuid=? AND titleType=?;',
+                            ['wishList', titleId, uuid, titleType],
+                            (error, results, fields) => {
+                                if (error) {
+                                    console.warn(error);
+                                    return res.send({
+                                        status: error.code,
+                                    });
+                                }
+                                // Removed from wishList, and has been added to watchedList
+                                // console.log('Deleted ' + results.affectedRows + ' rows from wishList');
                             });
-                        }
-                        if (results.length > 0) {
-                            // Movie is in wishList..
-                            // so remove it from wishList
-                            db.query('DELETE FROM history WHERE listType=? AND titleId=? AND uuid=? AND titleType=?;',
-                                ['wishList', titleId, uuid, titleType],
-                                (error, results, fields) => {
-                                    if (error) {
-                                        console.warn(error);
-                                        return res.send({
-                                            status: error.code,
-                                        });
-                                    }
-                                    // Removed from wishList, and has been added to watchedList
-                                    // console.log('Deleted ' + results.affectedRows + ' rows from wishList');
-                                });
-                        }
-                        return res.status(200).send({
-                            status: 'success',
-                        });
+                    }
+                    return res.status(200).send({
+                        status: 'success',
                     });
                 });
             });
