@@ -20,14 +20,19 @@ let connection = mysql.createConnection(dbConfig);
 const handleDisconnect = (connection) => {
     if (connection) {
         // Destroy current connection
-        connection.destroy();
+        try {
+            connection.destroy();
+            console.log('Connection destroyed!');
+        } catch (error) {
+            console.log('Connection couldn\'t be destroyed!');
+        }
     }
     // Create a new connection
     const conn = mysql.createConnection(dbConfig);
-    connection.connect((err) => {
+    conn.connect((err) => {
         if (err) {
             console.log('Error connecting: ' + err.stack);
-            setTimeout(handleDisconnect, 2000);
+            setTimeout(handleDisconnect(conn), 2000);
         } else {
             console.log('After reconnect, connected as ID: ' + connection.threadId);
             return conn;
@@ -37,7 +42,7 @@ const handleDisconnect = (connection) => {
 
 connection.connect((err) => {
     if (err) {
-        console.log('error connecting: ' + err.stack);
+        console.log('Error connecting on first attempt: ' + err.stack);
         connection = handleDisconnect(connection);
     }
     console.log('Connected as ID: ' + connection.threadId);
