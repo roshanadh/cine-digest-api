@@ -44,26 +44,26 @@ connection.connect((err) => {
 });
 
 
-connection.on('error', (err) => {    
+connection.on('error', (err) => {
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         // Connection closed by server
-        console.log('Cannot establish a connection with the database. ' + err.code);
         connection = handleDisconnect(connection);
+        console.log('Couldn\'t establish a connection with the database. ' + err.code);
     } else if (err.code === 'PROTOCOL_ENQUEUE_AFTER_QUIT') {
         // PROTOCOL_ENQUEUE_AFTER-QUIT
-        console.log('Cannot establish a connection with the database. ' + err.code);
         connection = handleDisconnect(connection);
+        console.log('Couldn\'t establish a connection with the database. ' + err.code);
     } else if (err.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') {
         // connection variable must be recreated
-        console.log('Cannot establish a connection with the database. ' + err.code);
         connection = handleDisconnect(connection);
+        console.log('Couldn\'t establish a connection with the database. ' + err.code);
     } else if (err.code === 'PROTOCOL_ENQUEUE_HANDSHAKE_TWICE') {
         // Connection is already being established
-        console.log('Cannot establish a connection with the database. ' + err.code);
+        console.log('Couldn\'t establish a connection with the database. ' + err.code);
     } else {
         // Anything else
-        console.log('Cannot establish a connection with the database. ' + err.code);
         connection = handleDisconnect(connection);
+        console.log('Couldn\'t establish a connection with the database. ' + err.code);
     }
 });
 
