@@ -24,7 +24,7 @@ const handleDisconnect = (connection) => {
     }
     // Create a new connection
     const conn = mysql.createConnection(dbConfig);
-    connection.connect((err) => {
+    conn.connect((err) => {
         if (err) {
             console.log('Error connecting: ' + err.stack);
             setTimeout(handleDisconnect, 2000);
