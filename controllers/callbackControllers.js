@@ -194,7 +194,7 @@ class CallbackController {
                                     creditsProfilePath[i] = cast[i].profile_path;
                                 }
                                 // Get directors
-                                for (let i = 0; i < cast.length; i++) {
+                                for (let i = 0; i < crew.length; i++) {
                                     if (crew[i].job === 'Director') {
                                         directors.push(crew[i].name);
                                         directorsProfilePath.push(crew[i].profile_path);
