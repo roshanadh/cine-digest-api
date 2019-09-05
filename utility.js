@@ -13,6 +13,8 @@ const {
     DBNAME,
     DBUSERNAME,
     DBPASSWORD,
+    EMAILER,
+    EMAILERPASS,
 } = process.env;
 
 module.exports = {
@@ -27,4 +29,6 @@ module.exports = {
     DBNAME,
     DBUSERNAME,
     DBPASSWORD,
+    EMAILER,
+    EMAILERPASS,
 };
