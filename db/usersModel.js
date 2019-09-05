@@ -116,7 +116,7 @@ class UsersModel {
             password,
         } = req.body;
 
-        pool.query('SELECT uuid, password, validatedStatus FROM users WHERE username=?;', [username], (error, results, fields) => {
+        pool.query('SELECT uuid, password, validatedStatus, email FROM users WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
                 console.warn(error);
                 return res.send({
@@ -140,6 +140,7 @@ class UsersModel {
                                     // User's email is not validated
                                     return res.status(401).send({
                                         status: 'NOT-VALIDATED',
+                                        email: results[0].email,
                                     });
                                 }
                                 // User is validated
