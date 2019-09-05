@@ -72,6 +72,35 @@ class UsersModel {
         });
     }
 
+    validateUser(req, res) {
+        if (!req.body.username) {
+            return res.status(400).send({
+                status: 'NO-USERNAME',
+            });
+        } if (!req.body.email) {
+            return res.status(400).send({
+                status: 'NO-EMAIL',
+            });
+        }
+
+        const {
+            username,
+        } = req.body;
+
+        pool.query('UPDATE users SET validatedStatus=? WHERE username=?;', [true, username], (error, results, fields) => {
+            if (error) {
+                return res.send({
+                    status: error.code,
+                    message: error.sqlMessage,
+                });
+            }
+            console.log = 'User ' + results.insertId + ' validated';
+            return res.status(200).send({
+                status: 'success',
+            });
+        });
+    }
+
     verifyUser(req, res) {
         if (!req.body.username) {
             return res.status(400).send({
