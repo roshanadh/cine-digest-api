@@ -13,11 +13,9 @@ class UsersModel {
         const { uuid } = req.body;
         pool.query('SELECT * FROM users WHERE uuid=?;', [uuid], (error, results, fields) => {
             if (error) {
-                return pool.rollback(() => {
-                    res.send({
-                        status: error.code,
-                    });
-                    console.warn(error);
+                console.warn(error);
+                return res.send({
+                    status: error.code,
                 });
             }
             if (results.length > 0) {
@@ -60,11 +58,9 @@ class UsersModel {
 
         pool.query('INSERT INTO users(username, email, uuid, name, password) VALUES(?,?,?,?,?);', [username, email, uuid, name, password], (error, results, fields) => {
             if (error) {
-                return pool.rollback(() => {
-                    res.send({
-                        status: error.code,
-                    });
-                    console.warn(error);
+                console.warn(error);
+                return res.send({
+                    status: error.code,
                 });
             }
             console.log = 'User ' + results.insertId + ' added';
@@ -92,11 +88,9 @@ class UsersModel {
 
         pool.query('SELECT uuid, password FROM users WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
-                return pool.rollback(() => {
-                    res.send({
-                        status: error.code,
-                    });
-                    console.warn(error);
+                console.warn(error);
+                return res.send({
+                    status: error.code,
                 });
             }
             const len = results.length;
@@ -148,11 +142,9 @@ class UsersModel {
 
         pool.query('UPDATE users SET password=? WHERE username=?;', [newPassword, username], (error, results, fields) => {
             if (error) {
-                return pool.rollback(() => {
-                    res.send({
-                        status: error.code,
-                    });
-                    console.warn(error);
+                console.warn(error);
+                return res.send({
+                    status: error.code,
                 });
             }
             console.log = 'User ' + username + '\'s password updated.';
@@ -182,11 +174,9 @@ class UsersModel {
             console.warn('Name not null, username  null!');
             pool.query('UPDATE users SET name=? WHERE uuid=?;', [newName, uuid], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 console.log = 'User ' + username + '\'s password updated.';
@@ -204,11 +194,9 @@ class UsersModel {
 
             pool.query('UPDATE users SET name=?, username=? WHERE uuid=?;', [newName, newUsername, uuid], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 return res.status(200).send({ status: 'success' });
@@ -222,11 +210,9 @@ class UsersModel {
 
             pool.query('UPDATE users SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 return res.status(200).send({ status: 'success' });
