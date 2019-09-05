@@ -116,7 +116,7 @@ class UsersModel {
             password,
         } = req.body;
 
-        pool.query('SELECT uuid, password FROM users WHERE username=?;', [username], (error, results, fields) => {
+        pool.query('SELECT uuid, password, validatedStatus FROM users WHERE username=?;', [username], (error, results, fields) => {
             if (error) {
                 console.warn(error);
                 return res.send({
@@ -134,6 +134,15 @@ class UsersModel {
                         // Compare plain password with retrieved hash
                         bcrypt.compare(password, retrievedHash, (err, result) => {
                             if (result === true) {
+                                // Password is correct
+                                // Check if user is validated
+                                if (!results[0].validatedStatus) {
+                                    // User's email is not validated
+                                    return res.status(401).send({
+                                        status: 'NOT-VALIDATED',
+                                    });
+                                }
+                                // User is validated
                                 return res.status(200).send({
                                     status: 'success',
                                     uuid: results[0].uuid,
