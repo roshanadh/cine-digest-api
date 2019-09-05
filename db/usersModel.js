@@ -40,6 +40,10 @@ class UsersModel {
             return res.status(400).send({
                 status: 'NO-NAME',
             });
+        } if (!req.body.email) {
+            return res.status(400).send({
+                status: 'NO-EMAIL',
+            });
         } if (!req.body.password) {
             return res.status(400).send({
                 status: 'NO-PASSWORD',
@@ -48,12 +52,13 @@ class UsersModel {
         const {
             username,
             name,
+            email,
             password,
         } = req.body;
 
         const uuid = uuidv1();
 
-        pool.query('INSERT INTO users(username, uuid, name, password) VALUES(?,?,?,?);', [username, uuid, name, password], (error, results, fields) => {
+        pool.query('INSERT INTO users(username, email, uuid, name, password) VALUES(?,?,?,?,?);', [username, email, uuid, name, password], (error, results, fields) => {
             if (error) {
                 return pool.rollback(() => {
                     res.send({
