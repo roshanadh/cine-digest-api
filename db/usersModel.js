@@ -61,6 +61,7 @@ class UsersModel {
                 console.warn(error);
                 return res.send({
                     status: error.code,
+                    message: error.sqlMessage,
                 });
             }
             console.log = 'User ' + results.insertId + ' added';
