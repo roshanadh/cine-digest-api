@@ -56,7 +56,7 @@ class UsersModel {
 
         const uuid = uuidv1();
 
-        pool.query('INSERT INTO users(username, email, uuid, name, password) VALUES(?,?,?,?,?);', [username, email, uuid, name, password], (error, results, fields) => {
+        pool.query('INSERT INTO users(username, email, uuid, name, password, validatedStatus) VALUES(?,?,?,?,?,?);', [username, email, uuid, name, password, false], (error, results, fields) => {
             if (error) {
                 console.warn(error);
                 return res.send({
