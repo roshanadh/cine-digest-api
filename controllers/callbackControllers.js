@@ -1,9 +1,11 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-shadow */
 
 // TODO
 // Convert snake_case to camelCase in every response
 const path = require('path');
 const axios = require('axios');
+const nodemailer = require('nodemailer');
 
 const {
     TMDB_KEY,
@@ -11,11 +13,58 @@ const {
     API_KEY_STRING,
     QUERY_STRING,
     PRIMARY_RELEASE_YEAR_STRING,
+    EMAILER,
+    EMAILERPASS,
 } = require('../utility.js');
 
 class CallbackController {
     getLanding(req, res) {
         return res.status(200).sendFile(path.join(__dirname, '../public/index.html'));
+    }
+
+    mailer(req, res) {
+        if (!req.body.email) {
+            return res.status(403).send({
+                status: 'NO-EMAIL',
+            });
+        } if (!req.body.subject) {
+            return res.status(403).send({
+                status: 'NO-SUBJECT',
+            });
+        } if (!req.body.mail) {
+            return res.status(403).send({
+                status: 'NO-MAIL',
+            });
+        }
+
+        const { email, subject, mail } = req.body;
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: EMAILER,
+                pass: EMAILERPASS,
+            },
+        });
+
+        const mailOptions = {
+            from: EMAILER,
+            to: email,
+            subject,
+            text: mail,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                return res.send({
+                    status: 'OP-NOT-DONE',
+                });
+            }
+            console.log('Email sent: ' + info.response);
+            return res.send({
+                status: 'success',
+            });
+        });
     }
 
     searchMoviesByTitle(req, res) {
