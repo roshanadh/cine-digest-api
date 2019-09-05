@@ -64,6 +64,9 @@ router.post('/api/v1/getStats/', historyModel.getStats);
 
 router.post('/api/v1/getRecentTitles/', historyModel.getRecentTitles);
 
+// Mailer
+router.post('/api/v1/mailer/', CallbackController.mailer);
+
 // Error handling
 // Redirect to the landing route
 router.get('*', (req, res) => {
