@@ -55,9 +55,9 @@ class CallbackController {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log(error);
                 return res.send({
                     status: 'OP-NOT-DONE',
+                    message: error.message,
                 });
             }
             console.log('Email sent: ' + info.response);
