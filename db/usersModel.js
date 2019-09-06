@@ -196,11 +196,7 @@ class UsersModel {
     }
 
     updateProfile(req, res) {
-        if (!req.body.username) {
-            return res.status(400).send({
-                status: 'NO-USERNAME',
-            });
-        } if (!req.body.uuid) {
+        if (!req.body.uuid) {
             return res.status(400).send({
                 status: 'NO-UUID',
             });
