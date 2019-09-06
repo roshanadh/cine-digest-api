@@ -21,6 +21,7 @@ class UsersModel {
             if (results.length > 0) {
                 return res.status(200).send({
                     username: results[0].username,
+                    email: results[0].email,
                     name: results[0].name,
                     uuid,
                 });
