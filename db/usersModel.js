@@ -23,6 +23,7 @@ class UsersModel {
                     username: results[0].username,
                     email: results[0].email,
                     name: results[0].name,
+                    validatedStatus: results[0].validatedStatus,
                     uuid,
                 });
             }
