@@ -212,7 +212,7 @@ class UsersModel {
                 newName,
             } = req.body;
             console.warn('Name, email and username not null!');
-            pool.query('UPDATE users SET name=?, email=?, username=? WHERE uuid=?;', [newName, newEmail, newUsername, uuid], (error, results, fields) => {
+            pool.query('UPDATE users SET name=?, email=?, username=?, validatedStatus=? WHERE uuid=?;', [newName, newEmail, newUsername, false, uuid], (error, results, fields) => {
                 if (error) {
                     console.warn(error);
                     return res.send({
@@ -250,7 +250,7 @@ class UsersModel {
                 uuid,
             } = req.body;
             console.warn('Username and email not null!');
-            pool.query('UPDATE users SET email=?, username=? WHERE uuid=?;', [newEmail, newUsername, uuid], (error, results, fields) => {
+            pool.query('UPDATE users SET email=?, username=?, validatedStatus=? WHERE uuid=?;', [newEmail, newUsername, false, uuid], (error, results, fields) => {
                 if (error) {
                     console.warn(error);
                     return res.send({
@@ -269,7 +269,7 @@ class UsersModel {
                 newName,
             } = req.body;
             console.warn('Name and email not null!');
-            pool.query('UPDATE users SET name=?, email=? WHERE uuid=?;', [newName, newEmail, uuid], (error, results, fields) => {
+            pool.query('UPDATE users SET name=?, email=?, validatedStatus=? WHERE uuid=?;', [newName, newEmail, false, uuid], (error, results, fields) => {
                 if (error) {
                     console.warn(error);
                     return res.send({
@@ -323,7 +323,7 @@ class UsersModel {
                 uuid,
             } = req.body;
             console.warn('Email not null!');
-            pool.query('UPDATE users SET email=? WHERE uuid=?;', [newEmail, uuid], (error, results, fields) => {
+            pool.query('UPDATE users SET email=?, validatedStatus=? WHERE uuid=?;', [newEmail, false, uuid], (error, results, fields) => {
                 if (error) {
                     console.warn(error);
                     return res.send({
