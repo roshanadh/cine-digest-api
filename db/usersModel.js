@@ -217,6 +217,7 @@ class UsersModel {
                     console.warn(error);
                     return res.send({
                         status: error.code,
+                        message: error.sqlMessage,
                     });
                 }
                 return res.status(200).send({
@@ -236,6 +237,7 @@ class UsersModel {
                     console.warn(error);
                     return res.send({
                         status: error.code,
+                        message: error.sqlMessage,
                     });
                 }
                 return res.status(200).send({
@@ -255,6 +257,7 @@ class UsersModel {
                     console.warn(error);
                     return res.send({
                         status: error.code,
+                        message: error.sqlMessage,
                     });
                 }
                 return res.status(200).send({
@@ -274,6 +277,7 @@ class UsersModel {
                     console.warn(error);
                     return res.send({
                         status: error.code,
+                        message: error.sqlMessage,
                     });
                 }
                 return res.status(200).send({
@@ -292,6 +296,7 @@ class UsersModel {
                     console.warn(error);
                     return res.send({
                         status: error.code,
+                        message: error.sqlMessage,
                     });
                 }
                 return res.status(200).send({
@@ -310,6 +315,7 @@ class UsersModel {
                     console.warn(error);
                     return res.send({
                         status: error.code,
+                        message: error.sqlMessage,
                     });
                 }
                 return res.status(200).send({
@@ -328,6 +334,7 @@ class UsersModel {
                     console.warn(error);
                     return res.send({
                         status: error.code,
+                        message: error.sqlMessage,
                     });
                 }
                 return res.status(200).send({
