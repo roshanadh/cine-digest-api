@@ -206,33 +206,34 @@ class UsersModel {
             });
         }
 
-        if (!req.body.newUsername && req.body.newName) {
+        if (req.body.newUsername && req.body.newName && req.body.newEmail) {
+            // u, n ,e
             const {
-                username,
+                newUsername,
+                newEmail,
                 uuid,
                 newName,
             } = req.body;
-            console.warn('Name not null, username  null!');
-            pool.query('UPDATE users SET name=? WHERE uuid=?;', [newName, uuid], (error, results, fields) => {
+            console.warn('Name, email and username not null!');
+            pool.query('UPDATE users SET name=?, email=?, username=? WHERE uuid=?;', [newName, newEmail, newUsername, uuid], (error, results, fields) => {
                 if (error) {
                     console.warn(error);
                     return res.send({
                         status: error.code,
                     });
                 }
-                console.log = 'User ' + username + '\'s password updated.';
                 return res.status(200).send({
                     status: 'success',
                 });
             });
-        } else if (req.body.newUsername && req.body.newName) {
+        } else if (req.body.newUsername && req.body.newName && !req.body.newEmail) {
+            // u, n
             const {
+                newUsername,
                 uuid,
                 newName,
-                newUsername,
             } = req.body;
-            console.warn('Name not null, username not null!');
-
+            console.warn('Name and username not null!');
             pool.query('UPDATE users SET name=?, username=? WHERE uuid=?;', [newName, newUsername, uuid], (error, results, fields) => {
                 if (error) {
                     console.warn(error);
@@ -240,15 +241,55 @@ class UsersModel {
                         status: error.code,
                     });
                 }
-                return res.status(200).send({ status: 'success' });
+                return res.status(200).send({
+                    status: 'success',
+                });
             });
-        } else if (req.body.newUsername && !req.body.newName) {
+        } else if (req.body.newUsername && !req.body.newName && req.body.newEmail) {
+            // u ,e
+            const {
+                newUsername,
+                newEmail,
+                uuid,
+            } = req.body;
+            console.warn('Username and email not null!');
+            pool.query('UPDATE users SET email=?, username=? WHERE uuid=?;', [newEmail, newUsername, uuid], (error, results, fields) => {
+                if (error) {
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
+                    });
+                }
+                return res.status(200).send({
+                    status: 'success',
+                });
+            });
+        } else if (!req.body.newUsername && req.body.newName && req.body.newEmail) {
+            // n ,e
+            const {
+                newEmail,
+                uuid,
+                newName,
+            } = req.body;
+            console.warn('Name and email not null!');
+            pool.query('UPDATE users SET name=?, email=? WHERE uuid=?;', [newName, newEmail, uuid], (error, results, fields) => {
+                if (error) {
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
+                    });
+                }
+                return res.status(200).send({
+                    status: 'success',
+                });
+            });
+        } else if (req.body.newUsername && !req.body.newName && !req.body.newEmail) {
+            // u
             const {
                 newUsername,
                 uuid,
             } = req.body;
-            console.warn('Name null, username not null!');
-
+            console.warn('Username not null!');
             pool.query('UPDATE users SET username=? WHERE uuid=?;', [newUsername, uuid], (error, results, fields) => {
                 if (error) {
                     console.warn(error);
@@ -256,10 +297,48 @@ class UsersModel {
                         status: error.code,
                     });
                 }
-                return res.status(200).send({ status: 'success' });
+                return res.status(200).send({
+                    status: 'success',
+                });
+            });
+        } else if (!req.body.newUsername && req.body.newName && !req.body.newEmail) {
+            // n
+            const {
+                uuid,
+                newName,
+            } = req.body;
+            console.warn('Name not null!');
+            pool.query('UPDATE users SET name=? WHERE uuid=?;', [newName, uuid], (error, results, fields) => {
+                if (error) {
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
+                    });
+                }
+                return res.status(200).send({
+                    status: 'success',
+                });
+            });
+        } else if (!req.body.newUsername && !req.body.newName && req.body.newEmail) {
+            // e
+            const {
+                newEmail,
+                uuid,
+            } = req.body;
+            console.warn('Email not null!');
+            pool.query('UPDATE users SET email=? WHERE uuid=?;', [newEmail, uuid], (error, results, fields) => {
+                if (error) {
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
+                    });
+                }
+                return res.status(200).send({
+                    status: 'success',
+                });
             });
         } else {
-            console.warn('Username and Name both null!');
+            console.warn('Username, name and email all null!');
             return res.status(404).send({ status: 'NO-FIELD-TO-CHANGE' });
         }
     }
