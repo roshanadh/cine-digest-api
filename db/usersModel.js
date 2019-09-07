@@ -143,6 +143,7 @@ class UsersModel {
                                     return res.status(401).send({
                                         status: 'NOT-VALIDATED',
                                         email: results[0].email,
+                                        uuid: results[0].uuid,
                                     });
                                 }
                                 // User is validated
