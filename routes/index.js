@@ -43,6 +43,7 @@ router.get('/api/v1/getsr/:id/', CallbackController.getShowR);
 
 // User Model
 router.post('/api/v1/getUser/', usersModel.getUser);
+router.post('/api/v1/checkEmail/', usersModel.isEmailRegistered);
 router.post('/api/v1/register/', usersModel.addUser);
 router.post('/api/v1/validate/', usersModel.validateUser);
 router.post('/api/v1/verify/', usersModel.verifyUser);
