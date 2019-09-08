@@ -136,7 +136,8 @@ class UsersModel {
         const subject = 'Reset Password for Cine Digest';
         const mail = 'Your Cine Digest password has been reset.\n'
             + 'Your temporary password is: ' + ranString + '\n'
-            + 'Remember to change your password after you sign in!';
+            + 'Remember to change your password after you sign in!'
+            + 'DELETE THIS EMAIL IMMEDIATELY AFTER YOU HAVE SAVED YOUR PASSWORD SOMEWHERE ELSE!';
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
