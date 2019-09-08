@@ -31,6 +31,31 @@ class UsersModel {
         });
     }
 
+    isEmailRegistered(req, res) {
+        if (!req.body.email) {
+            return res.status(400).send({
+                status: 'NO-EMAIL',
+            });
+        }
+
+        const { email } = req.body;
+        pool.query('SELECT * FROM users WHERE email=?;', [email], (error, results, fields) => {
+            if (error) {
+                console.warn(error);
+                return res.send({
+                    status: error.code,
+                });
+            }
+            if (results.length > 0) {
+                return res.status(200).send({
+                    username: results[0].username,
+                    uuid: results[0].uuid,
+                });
+            }
+            return res.status(404).send({ status: 'NOT-FOUND' });
+        });
+    }
+
     addUser(req, res) {
         if (!req.body.username) {
             return res.status(400).send({
