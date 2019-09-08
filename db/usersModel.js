@@ -1,7 +1,13 @@
 /* eslint-disable consistent-return */
 const bcrypt = require('bcryptjs');
 const uuidv1 = require('uuid/v1');
+const nodemailer = require('nodemailer');
+
 const pool = require('./index.js');
+const {
+    EMAILER,
+    EMAILERPASS,
+} = require('../utility.js');
 
 class UsersModel {
     getUser(req, res) {
@@ -50,6 +56,136 @@ class UsersModel {
                 return res.status(200).send({ status: 'success' });
             }
             return res.status(404).send({ status: 'NOT-FOUND' });
+        });
+    }
+
+    resetPassword(req, res) {
+        if (!req.body.email) {
+            return res.status(400).send({
+                status: 'NO-EMAIL',
+            });
+        } if (!req.body.userCode) {
+            return res.status(400).send({
+                status: 'NO-USER-CODE',
+            });
+        } if (!req.body.code) {
+            return res.status(400).send({
+                status: 'NO-CODE',
+            });
+        }
+
+        const { email, code, userCode } = req.body;
+
+        if (code !== userCode) {
+            return res.status(401).send({
+                status: 'NO-PERMISSION',
+            });
+        }
+
+        // Temporary Password
+        const string = Math.random().toString(26)
+            .replace('.', '')
+            .replace(Math.floor(Math.random() * 10).toString(), '@')
+            .replace(Math.floor(Math.random() * 10).toString(), '#')
+            .replace(Math.floor(Math.random() * 10).toString(), '!')
+            .replace(Math.floor(Math.random() * 10).toString(), '$')
+            .replace(Math.floor(Math.random() * 10).toString(), '_');
+
+        let ranString = '';
+        if (string.length > 6) {
+            ranString = string.substring(0, 10);
+        } else if (string.length < 6) {
+            switch (string.length) {
+            case 0:
+                ranString = 'za!2#$z*-b';
+                break;
+            case 1:
+                ranString = string + '123abz-b/';
+                break;
+            case 2:
+                ranString = string + 'a4z*-b//';
+                break;
+            case 3:
+                ranString = string + 'rw-b!@^';
+                break;
+            case 4:
+                ranString = string + '/ab-+9';
+                break;
+            case 5:
+                ranString = string + '1z*-b';
+                break;
+            case 6:
+                ranString = string + '!o)@';
+                break;
+            case 7:
+                ranString = string + '+-A';
+                break;
+            case 8:
+                ranString = string + '*=';
+                break;
+            case 9:
+                ranString = string + '*';
+                break;
+            default:
+                null;
+            }
+        } else {
+            ranString = string;
+        }
+
+        const subject = 'Reset Password for Cine Digest';
+        const mail = 'Your Cine Digest password has been reset.\n'
+            + 'Your temporary password is: ' + ranString + '\n'
+            + 'Remember to change your password after you sign in!';
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: EMAILER,
+                pass: EMAILERPASS,
+            },
+        });
+
+        const mailOptions = {
+            from: EMAILER,
+            to: email,
+            subject,
+            text: mail,
+        };
+
+        bcrypt.genSalt(5, (_err, salt) => {
+            if (_err) {
+                return res.send({
+                    status: _err.message,
+                });
+            }
+            // Generate Hash for the password / ASYNC
+            bcrypt.hash(ranString, salt, (_err, hash) => {
+                if (_err) {
+                    return res.send({
+                        status: _err.message,
+                    });
+                }
+                pool.query('UPDATE users SET password=? WHERE email=?;', [hash, email], (error, results, fields) => {
+                    if (error) {
+                        console.warn(error);
+                        return res.send({
+                            status: error.code,
+                            message: error.sqlMessage,
+                        });
+                    }
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return res.send({
+                                status: 'MAIL-OP-NOT-DONE',
+                                message: error.message,
+                            });
+                        }
+                        console.log('Password Reset Email sent: ' + info.response);
+                    });
+                    return res.status(200).send({ status: 'success' });
+                });
+            });
         });
     }
 
