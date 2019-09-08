@@ -47,10 +47,7 @@ class UsersModel {
                 });
             }
             if (results.length > 0) {
-                return res.status(200).send({
-                    username: results[0].username,
-                    uuid: results[0].uuid,
-                });
+                return res.status(200).send({ status: 'success' });
             }
             return res.status(404).send({ status: 'NOT-FOUND' });
         });
