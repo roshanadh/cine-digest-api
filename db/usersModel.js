@@ -139,6 +139,11 @@ class UsersModel {
             + 'Remember to change your password after you sign in!'
             + 'DELETE THIS EMAIL IMMEDIATELY AFTER YOU HAVE SAVED YOUR PASSWORD SOMEWHERE ELSE!';
 
+        const html = '<h2>Your Cine Digest password has been reset.</h2>'
+            + '<p>Your temporary password is: <strong>' + ranString + '</strong></p>'
+            + '<h4>Remember to change your password after you sign in!</h4>'
+            + '<h4 style={color: "red"}>DELETE THIS EMAIL IMMEDIATELY AFTER YOU HAVE SAVED YOUR PASSWORD SOMEWHERE ELSE!</h4>';
+
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -152,6 +157,7 @@ class UsersModel {
             to: email,
             subject,
             text: mail,
+            html,
         };
 
         bcrypt.genSalt(5, (_err, salt) => {
