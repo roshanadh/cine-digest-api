@@ -54,7 +54,8 @@ class UsersModel {
                     status: error.code,
                 });
             }
-            if (results.length > 0) {
+            if (results.length > 0 && results[0].validatedStatus) {
+                // Email is registered and validated
                 return res.status(200).send({ status: 'success' });
             }
             return res.status(404).send({ status: 'NOT-FOUND' });
