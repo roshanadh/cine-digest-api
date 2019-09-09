@@ -2,11 +2,13 @@
 const bcrypt = require('bcryptjs');
 const uuidv1 = require('uuid/v1');
 const nodemailer = require('nodemailer');
+const CryptoJS = require('crypto-js');
 
 const pool = require('./index.js');
 const {
     EMAILER,
     EMAILERPASS,
+    CRYPTO_KEY,
 } = require('../utility.js');
 
 class UsersModel {
@@ -64,19 +66,22 @@ class UsersModel {
             return res.status(400).send({
                 status: 'NO-EMAIL',
             });
-        } if (!req.body.userCode) {
+        } if (!req.body.emailCipher) {
             return res.status(400).send({
-                status: 'NO-USER-CODE',
-            });
-        } if (!req.body.code) {
-            return res.status(400).send({
-                status: 'NO-CODE',
+                status: 'NO-CIPHER',
             });
         }
 
-        const { email, code, userCode } = req.body;
+        const { email, emailCipher } = req.body;
 
-        if (code !== userCode) {
+        const bytes = CryptoJS.AES.decrypt(emailCipher, CRYPTO_KEY);
+        const emailPlain = bytes.toString(CryptoJS.enc.Utf8);
+        /*
+            * email will be same as emailPlain ...
+            * only when the CRYPTO_KEY used to decrypt was ...
+            * also used to encrypt.
+        */
+        if (email !== emailPlain) {
             return res.status(401).send({
                 status: 'NO-PERMISSION',
             });
