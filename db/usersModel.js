@@ -74,14 +74,14 @@ class UsersModel {
 
         const { email, emailCipher } = req.body;
 
-        const bytes = CryptoJS.AES.decrypt(emailCipher, CRYPTO_KEY);
-        const emailPlain = bytes.toString(CryptoJS.enc.Utf8);
+        const bytes = CryptoJS.AES.decrypt(emailCipher.toString(), CRYPTO_KEY);
+        const plaintext = bytes.toString(CryptoJS.enc.Utf8);
         /*
-            * email will be same as emailPlain ...
+            * email will be same as plaintext ...
             * only when the CRYPTO_KEY used to decrypt was ...
             * also used to encrypt.
         */
-        if (email !== emailPlain) {
+        if (email !== plaintext) {
             return res.status(401).send({
                 status: 'NO-PERMISSION',
             });
