@@ -15,6 +15,7 @@ const {
     DBPASSWORD,
     EMAILER,
     EMAILERPASS,
+    CRYPTO_KEY,
 } = process.env;
 
 module.exports = {
@@ -31,4 +32,5 @@ module.exports = {
     DBPASSWORD,
     EMAILER,
     EMAILERPASS,
+    CRYPTO_KEY,
 };
