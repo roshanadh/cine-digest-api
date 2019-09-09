@@ -123,10 +123,15 @@ class CallbackController {
                         releaseDates,
                     });
                 }
-                return res.sendStatus(404);
+                return res.status(404).send({
+                    status: 'NOT-FOUND',
+                });
             })
             .catch((error) => {
-                res.sendStatus(error.response.status);
+                res.sendStatus({
+                    status: error.response.status,
+                    error,
+                });
             });
     }
 
@@ -186,10 +191,15 @@ class CallbackController {
                         releaseDates,
                     });
                 }
-                return res.sendStatus(404);
+                return res.status(404).send({
+                    status: 'NOT-FOUND',
+                });
             })
             .catch((error) => {
-                res.sendStatus(error.response.status);
+                res.sendStatus({
+                    status: error.response.status,
+                    error,
+                });
             });
     }
 
@@ -335,10 +345,15 @@ class CallbackController {
                         firstAirDates,
                     });
                 }
-                return res.sendStatus(404);
+                return res.status(404).send({
+                    status: 'NOT-FOUND',
+                });
             })
             .catch((error) => {
-                res.sendStatus(error.response.status);
+                res.sendStatus({
+                    status: error.response.status,
+                    error,
+                });
             });
     }
 
