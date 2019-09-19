@@ -562,6 +562,7 @@ class CallbackController {
                      * is an instance of XMLHttpRequest in the browser and an instance
                      * of http.ClientRequest in Node.js
                      */
+                    console.error('No response!');
                     console.error(error.request + ' at callbackControllers/getMovieR');
                     res.sendStatus(102);
                 } else {
@@ -643,6 +644,7 @@ class CallbackController {
                      * is an instance of XMLHttpRequest in the browser and an instance
                      * of http.ClientRequest in Node.js
                      */
+                    console.error('No response!');
                     console.error(error.request + ' at callbackControllers/getMovieR');
                     res.sendStatus(102);
                 } else {
