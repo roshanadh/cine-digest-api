@@ -567,6 +567,7 @@ class CallbackController {
                     res.sendStatus(102);
                 } else {
                     // Something happened in setting up the request and triggered an Error
+                    console.error('Bad request!');
                     console.error(error.message + ' at callbackControllers/getMovieR');
                     res.sendStatus(400);
                 }
@@ -649,6 +650,7 @@ class CallbackController {
                     res.sendStatus(102);
                 } else {
                     // Something happened in setting up the request and triggered an Error
+                    console.error('Bad request!');
                     console.error(error.message + ' at callbackControllers/getMovieR');
                     res.sendStatus(400);
                 }
