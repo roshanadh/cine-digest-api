@@ -630,7 +630,26 @@ class CallbackController {
                 return res.sendStatus(404);
             })
             .catch((error) => {
-                res.sendStatus(error.response.status);
+                if (error.response) {
+                    /*
+                     * The request was made and the server responded with a
+                     * status code that falls out of the range of 2xx
+                     */
+                    console.error(error.response.status + ' at callbackControllers/getMovieR');
+                    res.sendStatus(error.response.status);
+                } else if (error.request) {
+                    /*
+                     * The request was made but no response was received, `error.request`
+                     * is an instance of XMLHttpRequest in the browser and an instance
+                     * of http.ClientRequest in Node.js
+                     */
+                    console.error(error.request + ' at callbackControllers/getMovieR');
+                    res.sendStatus(102);
+                } else {
+                    // Something happened in setting up the request and triggered an Error
+                    console.error(error.message + ' at callbackControllers/getMovieR');
+                    res.sendStatus(400);
+                }
             });
     }
 }
