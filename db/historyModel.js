@@ -660,11 +660,9 @@ class HistoryModel {
         const { uuid, titleType } = req.body;
         pool.query('SELECT * FROM history WHERE titleType=? AND uuid=?;', [titleType, uuid], (error, results, fields) => {
             if (error) {
-                return pool.rollback(() => {
-                    res.send({
-                        status: error.code,
-                    });
-                    console.warn(error);
+                console.warn(error);
+                return res.send({
+                    status: error.code,
                 });
             }
             if (results.length > 0) {
