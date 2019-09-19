@@ -32,11 +32,9 @@ class HistoryModel {
             } = req.body;
             pool.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, listType, titleId, titleType], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 if (results.length > 0) {
@@ -55,11 +53,9 @@ class HistoryModel {
             } = req.body;
             pool.query('SELECT * FROM history WHERE uuid=? AND titleId=? AND titleType=?;', [uuid, titleId, titleType], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 if (results.length > 0) {
@@ -118,11 +114,9 @@ class HistoryModel {
         pool.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
@@ -178,11 +172,9 @@ class HistoryModel {
         pool.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
@@ -190,11 +182,9 @@ class HistoryModel {
                 // Added to watchedList, now check if movie is present in wishlist (then remove)
                 pool.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
-                        return pool.rollback(() => {
-                            res.send({
-                                status: error.code,
-                            });
-                            console.warn(error);
+                        console.warn(error);
+                        return res.send({
+                            status: error.code,
                         });
                     }
                     if (results.length > 0) {
@@ -266,11 +256,9 @@ class HistoryModel {
         pool.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 console.log = 'Movie ' + titleId + ' added to ' + uuid + '\'s ' + listType;
@@ -326,22 +314,18 @@ class HistoryModel {
         pool.query('INSERT INTO history(listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
                 if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 console.log = 'Show ' + titleId + ' added to ' + uuid + '\'s ' + listType;
                 // Added to watchingList, now check if show is present in wishlist (then remove)
                 pool.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
-                        return pool.rollback(() => {
-                            res.send({
-                                status: error.code,
-                            });
-                            console.warn(error);
+                        console.warn(error);
+                        return res.send({
+                            status: error.code,
                         });
                     }
                     if (results.length > 0) {
@@ -411,23 +395,19 @@ class HistoryModel {
 
         pool.query('INSERT INTO history(listType, titleId, titleName,titleOverview, titleVoteCount, titleVoteAverage,titlePosterPath, titleType, uuid) VALUES (?,?,?,?,?,?,?,?,?);',
             [listType, titleId, titleName, titleOverview, titleVoteCount, titleVoteAverage, titlePosterPath, titleType, uuid], (error, results, fields) => {
-                if (error) {
-                    return pool.rollback(() => {
-                        res.send({
-                            status: error.code,
-                        });
-                        console.warn(error);
+                if(error) {
+                    console.warn(error);
+                    return res.send({
+                        status: error.code,
                     });
                 }
                 console.log = 'Show ' + titleId + ' added to ' + uuid + '\'s ' + listType;
                 // Added to watchedList, now check if show is present in wishlist (then remove)
                 pool.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'wishList', titleId, titleType], (error, results, fields) => {
                     if (error) {
-                        return pool.rollback(() => {
-                            res.send({
-                                status: error.code,
-                            });
-                            console.warn(error);
+                        console.warn(error);
+                        return res.send({
+                            status: error.code,
                         });
                     }
                     if (results.length > 0) {
@@ -448,11 +428,9 @@ class HistoryModel {
                     // Check to see if it is in watchingList (then remove it)
                     pool.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleId=? AND titleType=?;', [uuid, 'watchingList', titleId, titleType], (error, results, fields) => {
                         if (error) {
-                            return pool.rollback(() => {
-                                res.send({
-                                    status: error.code,
-                                });
-                                console.warn(error);
+                            console.warn(error);
+                            return res.send({
+                                status: error.code,
                             });
                         }
                         if (results.length > 0) {
@@ -564,11 +542,9 @@ class HistoryModel {
 
         pool.query('SELECT * FROM history WHERE uuid=? AND listType=? AND titleType=?;', [uuid, listType, titleType], (error, results, fields) => {
             if (error) {
-                return pool.rollback(() => {
-                    res.send({
-                        status: error.code,
-                    });
-                    console.warn(error);
+                console.warn(error);
+                return res.send({
+                    status: error.code,
                 });
             }
             if (results.length > 0) {
@@ -594,11 +570,9 @@ class HistoryModel {
 
         pool.query('SELECT * FROM history WHERE uuid=?;', [uuid], (error, results, fields) => {
             if (error) {
-                return pool.rollback(() => {
-                    res.send({
-                        status: error.code,
-                    });
-                    console.warn(error);
+                console.warn(error);
+                return res.send({
+                    status: error.code,
                 });
             }
             if (results.length > 0) {
