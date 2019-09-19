@@ -670,11 +670,11 @@ class HistoryModel {
                 const recentTitles = [];
                 let lowerLimit = 0;
                 switch (len) {
-                case len <= 5:
+                case len <= 10:
                     lowerLimit = 0;
                     break;
-                case len > 6:
-                    lowerLimit = len - 6;
+                case len > 10:
+                    lowerLimit = len - 10;
                     break;
                 default:
                     break;
