@@ -637,7 +637,7 @@ class CallbackController {
                      * The request was made and the server responded with a
                      * status code that falls out of the range of 2xx
                      */
-                    console.error(error.response.status + ' at callbackControllers/getMovieR');
+                    console.error(error.response.status + ' at callbackControllers/getShowR');
                     res.sendStatus(error.response.status);
                 } else if (error.request) {
                     /*
@@ -646,12 +646,12 @@ class CallbackController {
                      * of http.ClientRequest in Node.js
                      */
                     console.error('No response!');
-                    console.error(error.request + ' at callbackControllers/getMovieR');
+                    console.error(error.request + ' at callbackControllers/getShowR');
                     res.sendStatus(102);
                 } else {
                     // Something happened in setting up the request and triggered an Error
                     console.error('Bad request!');
-                    console.error(error.message + ' at callbackControllers/getMovieR');
+                    console.error(error.message + ' at callbackControllers/getShowR');
                     res.sendStatus(400);
                 }
             });
