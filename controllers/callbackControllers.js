@@ -546,7 +546,9 @@ class CallbackController {
                         releaseDates,
                     });
                 }
-                return res.sendStatus(404);
+                return res.status(404).send({
+                    status: 'NOT-FOUND',
+                });
             })
             .catch((error) => {
                 if (error.response) {
@@ -637,7 +639,8 @@ class CallbackController {
                      * The request was made and the server responded with a
                      * status code that falls out of the range of 2xx
                      */
-                    console.error(error.response.status + ' at callbackControllers/getShowR');
+                    console.error(error.response.status + ' at callbackControllers/getShow
+                    R');
                     res.sendStatus(error.response.status);
                 } else if (error.request) {
                     /*
@@ -646,12 +649,14 @@ class CallbackController {
                      * of http.ClientRequest in Node.js
                      */
                     console.error('No response!');
-                    console.error(error.request + ' at callbackControllers/getShowR');
+                    console.error(error.request + ' at callbackControllers/getShow
+                    R');
                     res.sendStatus(102);
                 } else {
                     // Something happened in setting up the request and triggered an Error
                     console.error('Bad request!');
-                    console.error(error.message + ' at callbackControllers/getShowR');
+                    console.error(error.message + ' at callbackControllers/getShow
+                    R');
                     res.sendStatus(400);
                 }
             });
