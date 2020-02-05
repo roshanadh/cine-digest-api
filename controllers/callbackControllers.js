@@ -206,7 +206,6 @@ class CallbackController {
     getMovieById(req, res) {
         let PATH = `/movie/${req.params.id}`;
         let requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY + '&append_to_response=videos';
-        console.log(requestURL + ' is the request url')
         // Get Movie information
         axios.get(requestURL)
             .then((response) => {
