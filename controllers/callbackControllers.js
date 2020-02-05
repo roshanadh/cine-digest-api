@@ -205,13 +205,14 @@ class CallbackController {
 
     getMovieById(req, res) {
         let PATH = `/movie/${req.params.id}`;
-        let requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
-
+        let requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY + '&append_to_response=videos';
+        console.log(requestURL + ' is the request url')
         // Get Movie information
         axios.get(requestURL)
             .then((response) => {
                 const responseStatus = parseInt(response.status, 10);
                 const responseBody = response.data;
+
                 if (responseStatus === 200) {
                     const {
                         backdrop_path,
@@ -230,8 +231,16 @@ class CallbackController {
                         title,
                         vote_average,
                         vote_count,
+                        videos,
                     } = responseBody;
-
+                    // Get YouTube video key
+                    const videoKey = videos.results[0].key;
+                    // Get YouTube video type
+                    const videoType = videos.results[0].type;
+                    const video = {
+                        videoKey,
+                        videoType,
+                    };
                     // Get credits
                     PATH = `/movie/${req.params.id}/credits`;
                     requestURL = BASE_URL + PATH + API_KEY_STRING + TMDB_KEY;
@@ -280,6 +289,7 @@ class CallbackController {
                                     overview,
                                     poster_path,
                                     release_date,
+                                    video,
                                 });
                             }
                         })
